@@ -18,6 +18,7 @@
 #include <metashell/pragma_mdb.hpp>
 #include <metashell/shell.hpp>
 #include <metashell/readline_mdb_shell.hpp>
+#include <metashell/mdb_templight_be.hpp>
 
 using namespace metashell;
 
@@ -47,7 +48,12 @@ void pragma_mdb::run(
 {
   std::string args = tokens_to_string(args_begin_, args_end_);
 
-  readline_mdb_shell mdb_shell(_shell.get_config(), _shell.env());
+  mdb_templight_be mdb_be(
+      _shell.get_config(),
+      _shell.env());
+
+  readline_mdb_shell mdb_shell(mdb_be);
+
   mdb_shell.display_splash();
 
   if (!args.empty()) {

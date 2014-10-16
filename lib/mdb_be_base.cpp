@@ -1,6 +1,3 @@
-#ifndef METASHELL_READLINE_MDB_SHELL_HPP
-#define METASHELL_READLINE_MDB_SHELL_HPP
-
 // Metashell - Interactive C++ template metaprogramming shell
 // Copyright (C) 2014, Andras Kucsma (andras.kucsma@gmail.com)
 //
@@ -17,33 +14,43 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-#include <metashell/colored_string.hpp>
 #include <metashell/mdb_shell.hpp>
-#include <metashell/readline_environment.hpp>
 #include <metashell/mdb_be_base.hpp>
 
 namespace metashell {
 
-class readline_mdb_shell : public mdb_shell {
-public:
-
-  readline_mdb_shell(mdb_be_base& mdb_be);
-
-  virtual void run();
-
-  virtual void add_history(const std::string& str);
-
-  virtual void display(
-      const colored_string& cs,
-      colored_string::size_type first,
-      colored_string::size_type length) const;
-
-  virtual unsigned width() const;
-private:
-
-  readline_environment readline_env;
-};
-
+void mdb_be_base::set_shell(mdb_shell *new_shell) {
+  shell = new_shell;
 }
 
-#endif
+void mdb_be_base::do_continue(int /*count*/) {
+  display_unsupported_command();
+}
+
+void mdb_be_base::do_step(step_type /*type*/, int /*count*/) {
+  display_unsupported_command();
+}
+
+void mdb_be_base::do_evaluate(const std::string& /*type*/) {
+  display_unsupported_command();
+}
+
+void mdb_be_base::do_forwardtrace(
+    forwardtrace_type /*type*/, boost::optional<unsigned> /*max_depth*/)
+{
+  display_unsupported_command();
+}
+
+void mdb_be_base::do_backtrace() {
+  display_unsupported_command();
+}
+
+void mdb_be_base::do_rbreak(const std::string& /*regex*/) {
+  display_unsupported_command();
+}
+
+void mdb_be_base::display_unsupported_command() {
+  shell->display_error("This command is not supported in this backend");
+}
+
+}

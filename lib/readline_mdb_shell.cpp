@@ -23,10 +23,8 @@
 
 namespace metashell {
 
-readline_mdb_shell::readline_mdb_shell(
-    const config& conf,
-    const environment& env) :
-  mdb_shell(conf, env) {}
+readline_mdb_shell::readline_mdb_shell(mdb_be_base& mdb_be) :
+  mdb_shell(mdb_be) {}
 
 void readline_mdb_shell::run() {
   for (boost::optional<std::string> line;

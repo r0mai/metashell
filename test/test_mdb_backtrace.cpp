@@ -14,7 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-#include "mdb_test_shell.hpp"
+#include "mdb_fixture.hpp"
 
 #include "test_metaprograms.hpp"
 
@@ -23,7 +23,7 @@
 using namespace metashell;
 
 #ifndef METASHELL_DISABLE_TEMPLIGHT_TESTS
-JUST_TEST_CASE(test_mdb_backtrace_without_evaluation) {
+JUST_FIXTURE_TEST_CASE(test_mdb_backtrace_without_evaluation, mdb_fixture) {
   mdb_test_shell sh;
 
   sh.line_available("backtrace");
@@ -34,7 +34,7 @@ JUST_TEST_CASE(test_mdb_backtrace_without_evaluation) {
 #endif
 
 #ifndef METASHELL_DISABLE_TEMPLIGHT_TESTS
-JUST_TEST_CASE(test_mdb_backtrace_unstepped_fibonacci) {
+JUST_FIXTURE_TEST_CASE(test_mdb_backtrace_unstepped_fibonacci, mdb_fixture) {
   mdb_test_shell sh(fibonacci_mp);
 
   sh.line_available("evaluate int_<fib<10>::value>");
@@ -47,7 +47,7 @@ JUST_TEST_CASE(test_mdb_backtrace_unstepped_fibonacci) {
 #endif
 
 #ifndef METASHELL_DISABLE_TEMPLIGHT_TESTS
-JUST_TEST_CASE(test_mdb_backtrace_1_stepped_fibonacci) {
+JUST_FIXTURE_TEST_CASE(test_mdb_backtrace_1_stepped_fibonacci, mdb_fixture) {
   mdb_test_shell sh(fibonacci_mp);
 
   sh.line_available("evaluate int_<fib<10>::value>");
@@ -63,7 +63,7 @@ JUST_TEST_CASE(test_mdb_backtrace_1_stepped_fibonacci) {
 #endif
 
 #ifndef METASHELL_DISABLE_TEMPLIGHT_TESTS
-JUST_TEST_CASE(test_mdb_backtrace_2_stepped_fibonacci) {
+JUST_FIXTURE_TEST_CASE(test_mdb_backtrace_2_stepped_fibonacci, mdb_fixture) {
   mdb_test_shell sh(fibonacci_mp);
 
   sh.line_available("evaluate int_<fib<10>::value>");
@@ -80,7 +80,7 @@ JUST_TEST_CASE(test_mdb_backtrace_2_stepped_fibonacci) {
 #endif
 
 #ifndef METASHELL_DISABLE_TEMPLIGHT_TESTS
-JUST_TEST_CASE(test_mdb_backtrace_3_stepped_fibonacci) {
+JUST_FIXTURE_TEST_CASE(test_mdb_backtrace_3_stepped_fibonacci, mdb_fixture) {
   mdb_test_shell sh(fibonacci_mp);
 
   sh.line_available("evaluate int_<fib<10>::value>");
@@ -98,7 +98,7 @@ JUST_TEST_CASE(test_mdb_backtrace_3_stepped_fibonacci) {
 #endif
 
 #ifndef METASHELL_DISABLE_TEMPLIGHT_TESTS
-JUST_TEST_CASE(test_mdb_backtrace_garbage_argument) {
+JUST_FIXTURE_TEST_CASE(test_mdb_backtrace_garbage_argument, mdb_fixture) {
   mdb_test_shell sh(fibonacci_mp);
 
   sh.line_available("evaluate int_<fib<10>::value>");
@@ -112,7 +112,7 @@ JUST_TEST_CASE(test_mdb_backtrace_garbage_argument) {
 #endif
 
 #ifndef METASHELL_DISABLE_TEMPLIGHT_TESTS
-JUST_TEST_CASE(test_mdb_backtrace_bt_alias) {
+JUST_FIXTURE_TEST_CASE(test_mdb_backtrace_bt_alias, mdb_fixture) {
   mdb_test_shell sh(fibonacci_mp);
 
   sh.line_available("evaluate int_<fib<10>::value>");

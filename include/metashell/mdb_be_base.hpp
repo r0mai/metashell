@@ -1,5 +1,5 @@
-#ifndef METASHELL_READLINE_MDB_SHELL_HPP
-#define METASHELL_READLINE_MDB_SHELL_HPP
+#ifndef METASHELL_MDB_BE_BASE_HPP
+#define METASHELL_MDB_BE_BASE_HPP
 
 // Metashell - Interactive C++ template metaprogramming shell
 // Copyright (C) 2014, Andras Kucsma (andras.kucsma@gmail.com)
@@ -17,31 +17,40 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-#include <metashell/colored_string.hpp>
-#include <metashell/mdb_shell.hpp>
-#include <metashell/readline_environment.hpp>
-#include <metashell/mdb_be_base.hpp>
+#include <memory>
+#include <string>
+#include <type_traits>
+
+#include <boost/optional.hpp>
 
 namespace metashell {
 
-class readline_mdb_shell : public mdb_shell {
+class mdb_shell;
+
+class mdb_be_base {
 public:
 
-  readline_mdb_shell(mdb_be_base& mdb_be);
+  mdb_be_base() = default;
 
-  virtual void run();
+  virtual ~mdb_be_base() = default;
 
-  virtual void add_history(const std::string& str);
+  void set_shell(mdb_shell *new_shell);
 
-  virtual void display(
-      const colored_string& cs,
-      colored_string::size_type first,
-      colored_string::size_type length) const;
+  enum class step_type { normal, over };
+  enum class forwardtrace_type { normal, full };
 
-  virtual unsigned width() const;
-private:
+  virtual void do_continue(int count);
+  virtual void do_step(step_type type, int count);
+  virtual void do_evaluate(const std::string& type);
+  virtual void do_forwardtrace(
+      forwardtrace_type type, boost::optional<unsigned> max_depth);
+  virtual void do_backtrace();
+  virtual void do_rbreak(const std::string& regex);
 
-  readline_environment readline_env;
+protected:
+  void display_unsupported_command();
+
+  mdb_shell *shell;
 };
 
 }

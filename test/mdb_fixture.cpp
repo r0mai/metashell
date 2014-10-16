@@ -1,5 +1,3 @@
-#ifndef METASHELL_READLINE_MDB_SHELL_HPP
-#define METASHELL_READLINE_MDB_SHELL_HPP
 
 // Metashell - Interactive C++ template metaprogramming shell
 // Copyright (C) 2014, Andras Kucsma (andras.kucsma@gmail.com)
@@ -17,33 +15,13 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-#include <metashell/colored_string.hpp>
-#include <metashell/mdb_shell.hpp>
-#include <metashell/readline_environment.hpp>
-#include <metashell/mdb_be_base.hpp>
+#include "test_shell.hpp"
+#include "mdb_fixture.hpp"
 
-namespace metashell {
+mdb_fixture::mdb_fixture() :
+  mdb_be(
+    test_shell().get_config(),
+    test_shell().env()
+  ),
+  sh(mdb_be) {}
 
-class readline_mdb_shell : public mdb_shell {
-public:
-
-  readline_mdb_shell(mdb_be_base& mdb_be);
-
-  virtual void run();
-
-  virtual void add_history(const std::string& str);
-
-  virtual void display(
-      const colored_string& cs,
-      colored_string::size_type first,
-      colored_string::size_type length) const;
-
-  virtual unsigned width() const;
-private:
-
-  readline_environment readline_env;
-};
-
-}
-
-#endif
