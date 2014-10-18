@@ -260,6 +260,35 @@ namespace just
   \
   void just_test_test_case_f_ ## name()
 
+#ifdef JUST_FIXTURE_TEST_CASE
+#  error JUST_FIXTURE_TEST_CASE already defined
+#endif
+#define JUST_FIXTURE_TEST_CASE(name, fixture) \
+  void just_test_test_case_f_ ## name(); \
+  \
+  struct just_test_test_case_ ## name \
+  { \
+    just_test_test_case_ ## name() \
+    { \
+      ::just::test::singleton< ::just::test::test_manager >::get().add( \
+        #name, &just_test_test_case_f_ ## name \
+      ); \
+    } \
+  }; \
+  \
+  just_test_test_case_ ## name just_test_test_case_instance_ ## name; \
+  \
+  struct just_fixture_test_case_ ## name : fixture \
+  { \
+    void test(); \
+  }; \
+  \
+  void just_test_case_f_ ## name() { \
+    just_fixture_test_case_ ## name().test(); \
+  } \
+  \
+  void just_fixture_test_case_ ## name::test()
+
 /*
  * Assertion macros
  */
