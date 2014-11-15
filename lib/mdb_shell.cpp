@@ -465,6 +465,10 @@ void mdb_shell::filter_similar_edges() {
 
   // Clang sometimes produces equivalent instantiations events from the same
   // point. Filter out all but one of each
+  //
+  // Also, if in normal mode:
+  //   If there are two edges which only differ in their instantiation kinds,
+  //   keep only the TemplateInstantiation kind
   for (vertex_descriptor vertex : mp->get_vertices()) {
 
     std::set<set_element_t, decltype(comparator)> similar_edges(comparator);
@@ -479,6 +483,16 @@ void mdb_shell::filter_similar_edges() {
 
       if (similar_edges.count(set_element) > 0) {
         edge_property.enabled = false;
+      } else if (mp->is_in_full_mode() &&
+                 edge_property.kind == instantiation_kind::memoization)
+      {
+        set_element_t set_element_ti = std::make_tuple(
+              edge_property.point_of_instantiation,
+              instantiation_kind::template_instantiation,
+              mp->get_target(edge));
+        if (similar_edges.count(set_element_ti) > 0) {
+          edge_property.enabled = false;
+        }
       } else {
         similar_edges.insert(set_element);
       }
@@ -880,6 +894,9 @@ colored_string mdb_shell::get_frame_string(
   if (!mp->is_in_full_mode()) {
     result += " (" + to_string(mp->get_edge_property(*frame).kind) + ")";
   }
+
+  std::stringstream ss; ss << mp->get_edge_property(*frame).point_of_instantiation;
+  //result += " (" + ss.str() + ")";
 
   return result;
 }
