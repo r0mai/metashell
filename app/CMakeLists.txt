@@ -26,6 +26,7 @@ target_link_libraries(metashell
   metashell_readline_lib
   metashell_clang_lib
   metashell_data_lib
+  metashell_mdb_lib
 )
 
 # Wave
