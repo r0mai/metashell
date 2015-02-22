@@ -29,43 +29,70 @@ void command::add_flag_option(
     const std::string& docs,
     bool default_value)
 {
-  using boost::program_options::bool_switch;
+  option_t<bool> o = {name, docs, default_value};
+  flag_options.push_back(o);
+}
 
-  assert(flag_options.count(name) == 0);
-
-  flag_options[name] = default_value;
-
-  options.add_options()(
-      name.c_str(),
-      bool_switch(&flag_options[name])->default_value(default_value),
-      docs.c_str());
+void command::add_int_option(
+    const std::string& name,
+    const std::string& docs,
+    int default_value)
+{
+  option_t<int> o = {name, docs, default_value};
+  int_options.push_back(o);
 }
 
 void command::add_numeric_positional_option(int default_value) {
   using boost::program_options::value;
 
-  assert(int_options.count(positional_parameter_name) == 0);
+  add_int_option(positional_parameter_name, "no-docs-yet", default_value);
 
-  int_options[positional_parameter_name] = default_value;
-
-  options.add_options()(
-      positional_parameter_name.c_str(),
-      value<int>(&int_options[positional_parameter_name])->
-      default_value(default_value));
-
-  positional_options.add(positional_parameter_name.c_str(), 1);
+  positional_option_t positional_option = {positional_parameter_name, 1};
+  positional_options.push_back(positional_option);
 }
 
-bool command::get_flag_option(const std::string& name) const {
-  assert(flag_options.count(name) != 0);
+parsed_command command::parse_options(const std::string& input) const {
+  namespace po = boost::program_options;
 
-  return flag_options.at(name);
-}
+  po::positional_options_description positional_options_desc;
+  po::options_description program_options;
 
-int command::get_numeric_positional_option() const {
-  assert(int_options.count(positional_parameter_name) != 0);
+  parsed_command result;
 
-  return int_options.at(positional_parameter_name);
+  for (const auto& flag_option : flag_options) {
+    assert(result.flag_options.count(flag_option.name) == 0);
+
+    result.flag_options[flag_option.name] = flag_option.default_value;
+
+    program_options.add_options()(
+        flag_option.name.c_str(),
+        po::bool_switch(&result.flag_options[flag_option.name])->
+          default_value(flag_option.default_value),
+        flag_option.docs.c_str());
+  }
+
+  for (const auto& int_option : int_options) {
+    assert(result.int_options.count(int_option.name) == 0);
+
+    result.int_options[int_option.name] = int_option.default_value;
+
+    program_options.add_options()(
+        int_option.name.c_str(),
+        po::value<int>(&result.int_options[int_option.name])->
+          default_value(int_option.default_value),
+        int_option.docs.c_str());
+  }
+
+  for (const auto& positional_option : positional_options) {
+    positional_options_desc.add(
+        positional_option.name.c_str(),
+        positional_option.max_count
+    );
+  }
+
+  //TODO actually tokenize and parse
+
+  return result;
 }
 
 command::words_t command::get_words() {

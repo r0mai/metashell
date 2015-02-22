@@ -20,6 +20,8 @@
 #include <string>
 #include <vector>
 
+#include <metashell/mdb/parsed_command.hpp>
+
 #include <boost/program_options.hpp>
 
 namespace metashell {
@@ -29,39 +31,45 @@ class command {
 public:
   typedef std::vector<std::string> words_t;
 
-  /*
-  enum class positional_option_type_t {
-    none,    // default
-    numeric, // like "3" in "step 3"
-    raw      // like "vector < int >" in "eval vector < int >"
-  };
-  */
-
   void add_flag_option(
       const std::string& name,
       const std::string& docs,
-      bool default_value = false);
+      bool default_value);
+  void add_int_option(
+      const std::string& name,
+      const std::string& docs,
+      int default_value);
 
   void add_numeric_positional_option(int default_value);
 
-  bool get_flag_option(const std::string& name) const;
-  int get_numeric_positional_option() const;
-
   words_t get_words();
+
+  parsed_command parse_options(const std::string& input) const;
 
 private:
   const static std::string positional_parameter_name;
 
-  typedef std::map<std::string, bool> flag_options_t;
-  typedef std::map<std::string, int> int_options_t;
+  template<class T>
+  struct option_t {
+    std::string name;
+    std::string docs;
+    T default_value;
+  };
 
-  words_t words;
+  struct positional_option_t {
+    std::string name;
+    int max_count;
+  };
+
+  typedef std::vector<option_t<bool>> flag_options_t;
+  typedef std::vector<option_t<int>> int_options_t;
+  typedef std::vector<positional_option_t> positional_options_t;
 
   flag_options_t flag_options;
   int_options_t int_options;
+  positional_options_t positional_options;
 
-  boost::program_options::positional_options_description positional_options;
-  boost::program_options::options_description options;
+  words_t words;
 };
 
 }
