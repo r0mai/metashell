@@ -56,7 +56,7 @@ metaprogram::edge_descriptor metaprogram::add_edge(
     vertex_descriptor from,
     vertex_descriptor to,
     data::instantiation_kind kind,
-    const file_location& point_of_instantiation)
+    const data::file_location& point_of_instantiation)
 {
   edge_descriptor edge;
   bool inserted;
@@ -323,7 +323,9 @@ data::frame metaprogram::to_frame(const edge_descriptor& e_) const
   return
     is_in_full_mode() ?
       data::frame(t) :
-      data::frame(t, get_edge_property(e_).kind);
+      data::frame(t,
+          get_edge_property(e_).point_of_instantiation,
+          get_edge_property(e_).kind);
 }
 
 data::frame metaprogram::get_current_frame() const {
