@@ -26,10 +26,9 @@ const std::string command::positional_parameter_name =
 
 void command::add_flag_option(
     const std::string& name,
-    const std::string& docs,
-    bool default_value)
+    const std::string& docs)
 {
-  option_t<bool> o = {name, docs, default_value};
+  option_t<bool> o = {name, docs, false};
   flag_options.push_back(o);
 }
 

@@ -27,5 +27,11 @@ bool parsed_command::get_flag_option(const std::string& name) const {
   return flag_options.at(name);
 }
 
+int parsed_command::get_int_option(const std::string& name) const {
+  assert(int_options.count(name) != 0);
+
+  return int_options.at(name);
+}
+
 }
 }

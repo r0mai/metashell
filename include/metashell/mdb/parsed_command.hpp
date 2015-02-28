@@ -28,6 +28,7 @@ class parsed_command {
 public:
 
   bool get_flag_option(const std::string& name) const;
+  int get_int_option(const std::string& name) const;
 
 private:
   typedef std::map<std::string, bool> flag_options_t;

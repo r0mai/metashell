@@ -33,8 +33,7 @@ public:
 
   void add_flag_option(
       const std::string& name,
-      const std::string& docs,
-      bool default_value);
+      const std::string& docs);
   void add_int_option(
       const std::string& name,
       const std::string& docs,
