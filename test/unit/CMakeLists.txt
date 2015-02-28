@@ -15,7 +15,8 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 aux_source_directory(. SOURCES)
-add_executable(metashell_unit_test ${SOURCES})
+aux_source_directory(mdb MDB_SOURCES)
+add_executable(metashell_unit_test ${SOURCES} ${MDB_SOURCES})
 
 enable_warnings()
 use_cpp11()
