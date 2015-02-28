@@ -40,7 +40,9 @@ public:
       const std::string& docs,
       int default_value);
 
+  // These are mutually exclusive
   void add_numeric_positional_option(int default_value);
+  void add_type_positional_option();
 
   words_t get_words();
 
@@ -68,6 +70,8 @@ private:
   flag_options_t flag_options;
   int_options_t int_options;
   positional_options_t positional_options;
+
+  bool has_type_position_option = false;
 
   words_t words;
 };

@@ -43,12 +43,20 @@ void command::add_int_option(
 }
 
 void command::add_numeric_positional_option(int default_value) {
+  assert(positional_options.empty());
+  assert(!has_type_position_option);
+
   using boost::program_options::value;
 
   add_int_option(positional_parameter_name, "no-docs-yet", default_value);
 
   positional_option_t positional_option = {positional_parameter_name, 1};
   positional_options.push_back(positional_option);
+}
+
+void command::add_type_positional_option() {
+  assert(positional_options.empty());
+  has_type_position_option = true;
 }
 
 parsed_command command::parse_options(const std::string& input) const {
