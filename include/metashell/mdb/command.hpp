@@ -22,14 +22,16 @@
 
 #include <metashell/mdb/parsed_command.hpp>
 
-#include <boost/program_options.hpp>
-
 namespace metashell {
 namespace mdb {
 
 class command {
 public:
   typedef std::vector<std::string> words_t;
+
+  enum class positional_option_t {
+    NONE, TYPE, NUMERIC
+  };
 
   void add_flag_option(
       const std::string& name,
@@ -39,9 +41,7 @@ public:
       const std::string& docs,
       int default_value);
 
-  // These are mutually exclusive
-  void add_numeric_positional_option(int default_value);
-  void add_type_positional_option();
+  void set_positional_option_type(positional_option_t p);
 
   parsed_command parse_options(const std::string& input) const;
 
@@ -55,20 +55,14 @@ private:
     T default_value;
   };
 
-  struct positional_option_t {
-    std::string name;
-    int max_count;
-  };
-
   typedef std::vector<option_t<bool>> flag_options_t;
   typedef std::vector<option_t<int>> int_options_t;
-  typedef std::vector<positional_option_t> positional_options_t;
+
+  void tokenize_input(const std::string& str) const;
 
   flag_options_t flag_options;
   int_options_t int_options;
-  positional_options_t positional_options;
-
-  bool has_type_position_option = false;
+  positional_option_t positional_option = positional_option_t::NONE;
 };
 
 }
