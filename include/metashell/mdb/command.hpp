@@ -43,8 +43,6 @@ public:
   void add_numeric_positional_option(int default_value);
   void add_type_positional_option();
 
-  words_t get_words();
-
   parsed_command parse_options(const std::string& input) const;
 
 private:
@@ -71,8 +69,6 @@ private:
   positional_options_t positional_options;
 
   bool has_type_position_option = false;
-
-  words_t words;
 };
 
 }

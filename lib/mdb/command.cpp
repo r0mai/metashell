@@ -102,9 +102,5 @@ parsed_command command::parse_options(const std::string& input) const {
   return result;
 }
 
-command::words_t command::get_words() {
-  return words;
-}
-
 }
 }
