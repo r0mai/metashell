@@ -59,12 +59,14 @@ using skipper_t = qi::space_type;
 
 template<class Iterator>
 struct command::command_grammar : qi::grammar<Iterator, skipper_t> {
-  command_grammar(parsed_command& result) :
+  command_grammar(const command& self, parsed_command& result) :
     command_grammar::base_type(start),
+    self(self),
     result(result)
   {
   }
 
+  const command& self;
   parsed_command& result;
 
   qi::rule<Iterator, skipper_t> start;
@@ -85,7 +87,7 @@ parsed_command command::parse_options(const std::string& input) const {
     result.int_options[int_option.name] = int_option.default_value;
   }
 
-  command_grammar<std::string::const_iterator> grammar(result);
+  command_grammar<std::string::const_iterator> grammar(*this, result);
 
   auto begin = input.begin();
   const auto end = input.end();
