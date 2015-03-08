@@ -20,6 +20,8 @@
 #include <string>
 #include <vector>
 
+#include <boost/optional.hpp>
+
 #include <metashell/mdb/parsed_command.hpp>
 
 namespace metashell {
@@ -58,7 +60,13 @@ private:
   typedef std::vector<option_t<bool>> flag_options_t;
   typedef std::vector<option_t<int>> int_options_t;
 
-  void tokenize_input(const std::string& str) const;
+  void fill_with_defaults(parsed_command& result) const;
+  void parse_options(const std::string& input, parsed_command& result) const;
+  void parse_next_option(
+      const std::string& input, std::size_t& i, parsed_command& result) const;
+  void skip_whitespace(const std::string& input, std::size_t& i) const;
+  boost::optional<std::string> parse_option_name(
+      const std::string& input, std::size_t& i) const;
 
   flag_options_t flag_options;
   int_options_t int_options;
