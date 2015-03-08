@@ -48,6 +48,7 @@ void command::add_int_option(
 }
 
 void command::set_positional_option_type(positional_option_t p) {
+  assert(positional_option == positional_option_t::NONE);
   positional_option = p;
 }
 
