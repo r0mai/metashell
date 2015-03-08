@@ -22,7 +22,7 @@ using namespace metashell;
 
 JUST_TEST_CASE(test_mdb_command_parsing_int_option) {
   mdb::command cmd;
-  cmd.add_int_option("steps", "docs", 0);
+  cmd.add_int_option('s', "steps", "docs", 0);
 
   mdb::parsed_command parsed_cmd = cmd.parse_options("--steps 32");
   JUST_ASSERT_EQUAL(32, parsed_cmd.get_int_option("steps"));
@@ -30,7 +30,7 @@ JUST_TEST_CASE(test_mdb_command_parsing_int_option) {
 
 JUST_TEST_CASE(test_mdb_command_parsing_int_options_default) {
   mdb::command cmd;
-  cmd.add_int_option("steps", "docs", 10);
+  cmd.add_int_option('s', "steps", "docs", 10);
 
   mdb::parsed_command parsed_cmd = cmd.parse_options("");
   JUST_ASSERT_EQUAL(10, parsed_cmd.get_int_option("steps"));
@@ -38,7 +38,7 @@ JUST_TEST_CASE(test_mdb_command_parsing_int_options_default) {
 
 JUST_TEST_CASE(test_mdb_command_parsing_flag_option) {
   mdb::command cmd;
-  cmd.add_flag_option("full", "docs");
+  cmd.add_flag_option('f', "full", "docs");
 
   mdb::parsed_command parsed_cmd = cmd.parse_options("--full");
   JUST_ASSERT(parsed_cmd.get_flag_option("full"));
@@ -46,7 +46,7 @@ JUST_TEST_CASE(test_mdb_command_parsing_flag_option) {
 
 JUST_TEST_CASE(test_mdb_command_parsing_flag_options_default) {
   mdb::command cmd;
-  cmd.add_flag_option("full", "docs");
+  cmd.add_flag_option('f', "full", "docs");
 
   mdb::parsed_command parsed_cmd = cmd.parse_options("");
   JUST_ASSERT(!parsed_cmd.get_flag_option("full"));

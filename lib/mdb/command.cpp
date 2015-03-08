@@ -16,6 +16,10 @@
 
 #include <cassert>
 
+#include <boost/spirit/include/qi.hpp>
+#include <boost/spirit/include/phoenix.hpp>
+
+#include <metashell/exception.hpp>
 #include <metashell/mdb/command.hpp>
 
 namespace metashell {
@@ -25,25 +29,50 @@ const std::string command::positional_parameter_name =
   "positional_parameter";
 
 void command::add_flag_option(
+    char short_name,
     const std::string& name,
     const std::string& docs)
 {
-  option_t<bool> o = {name, docs, false};
+  option_t<bool> o = {short_name, name, docs, false};
   flag_options.push_back(o);
 }
 
 void command::add_int_option(
+    char short_name,
     const std::string& name,
     const std::string& docs,
     int default_value)
 {
-  option_t<int> o = {name, docs, default_value};
+  option_t<int> o = {short_name, name, docs, default_value};
   int_options.push_back(o);
 }
 
 void command::set_positional_option_type(positional_option_t p) {
   positional_option = p;
 }
+
+namespace spirit = boost::spirit;
+namespace qi = boost::spirit::qi;
+namespace phx = boost::phoenix;
+
+namespace detail {
+
+using skipper_t = qi::space_type;
+
+template<class Iterator>
+struct command_grammar : qi::grammar<Iterator, skipper_t> {
+  command_grammar(parsed_command& result) :
+    command_grammar::base_type(start),
+    result(result)
+  {
+  }
+
+  parsed_command& result;
+
+  qi::rule<Iterator, skipper_t> start;
+};
+
+} // namespace detail
 
 parsed_command command::parse_options(const std::string& input) const {
   parsed_command result;
@@ -60,7 +89,16 @@ parsed_command command::parse_options(const std::string& input) const {
     result.int_options[int_option.name] = int_option.default_value;
   }
 
-  //TODO actually tokenize and parse
+  detail::command_grammar<std::string::const_iterator> grammar(result);
+
+  auto begin = input.begin();
+  const auto end = input.end();
+
+  bool success = qi::phrase_parse(begin, end, grammar, qi::space);
+
+  if (success && begin == end) {
+    throw exception("command parsing failed"); // TODO better error message
+  }
 
   return result;
 }

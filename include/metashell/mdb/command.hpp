@@ -34,9 +34,11 @@ public:
   };
 
   void add_flag_option(
+      char short_name,
       const std::string& name,
       const std::string& docs);
   void add_int_option(
+      char short_name,
       const std::string& name,
       const std::string& docs,
       int default_value);
@@ -50,6 +52,7 @@ private:
 
   template<class T>
   struct option_t {
+    char short_name; // unused if short_name == 0
     std::string name;
     std::string docs;
     T default_value;
