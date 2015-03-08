@@ -55,12 +55,10 @@ namespace spirit = boost::spirit;
 namespace qi = boost::spirit::qi;
 namespace phx = boost::phoenix;
 
-namespace detail {
-
 using skipper_t = qi::space_type;
 
 template<class Iterator>
-struct command_grammar : qi::grammar<Iterator, skipper_t> {
+struct command::command_grammar : qi::grammar<Iterator, skipper_t> {
   command_grammar(parsed_command& result) :
     command_grammar::base_type(start),
     result(result)
@@ -71,8 +69,6 @@ struct command_grammar : qi::grammar<Iterator, skipper_t> {
 
   qi::rule<Iterator, skipper_t> start;
 };
-
-} // namespace detail
 
 parsed_command command::parse_options(const std::string& input) const {
   parsed_command result;
@@ -89,7 +85,7 @@ parsed_command command::parse_options(const std::string& input) const {
     result.int_options[int_option.name] = int_option.default_value;
   }
 
-  detail::command_grammar<std::string::const_iterator> grammar(result);
+  command_grammar<std::string::const_iterator> grammar(result);
 
   auto begin = input.begin();
   const auto end = input.end();

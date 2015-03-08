@@ -58,6 +58,9 @@ private:
     T default_value;
   };
 
+  template<class Iterator>
+  struct command_grammar;
+
   typedef std::vector<option_t<bool>> flag_options_t;
   typedef std::vector<option_t<int>> int_options_t;
 
