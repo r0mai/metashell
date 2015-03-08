@@ -29,13 +29,16 @@ public:
 
   bool get_flag_option(const std::string& name) const;
   int get_int_option(const std::string& name) const;
+  std::string get_string_option(const std::string& name) const;
 
 private:
   typedef std::map<std::string, bool> flag_options_t;
   typedef std::map<std::string, int> int_options_t;
+  typedef std::map<std::string, std::string> string_options_t;
 
   flag_options_t flag_options;
   int_options_t int_options;
+  string_options_t string_options;
 };
 
 }

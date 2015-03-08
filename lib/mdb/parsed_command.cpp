@@ -33,5 +33,11 @@ int parsed_command::get_int_option(const std::string& name) const {
   return int_options.at(name);
 }
 
+std::string parsed_command::get_string_option(const std::string& name) const {
+  assert(string_options.count(name) != 0);
+
+  return string_options.at(name);
+}
+
 }
 }

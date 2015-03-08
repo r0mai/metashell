@@ -63,11 +63,13 @@ private:
 
   typedef std::vector<option_t<bool>> flag_options_t;
   typedef std::vector<option_t<int>> int_options_t;
+  typedef std::vector<option_t<std::string>> string_options_t;
 
   void tokenize_input(const std::string& str) const;
 
   flag_options_t flag_options;
   int_options_t int_options;
+  string_options_t string_options;
   positional_option_t positional_option = positional_option_t::NONE;
 };
 
