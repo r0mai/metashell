@@ -50,6 +50,15 @@ void command::add_int_option(
 void command::set_positional_option_type(positional_option_t p) {
   assert(positional_option == positional_option_t::NONE);
   positional_option = p;
+  if (p == positional_option_t::NUMERIC) {
+    option_t<int> o = {0, positional_parameter_name, "", 1};
+    int_options.push_back(o);
+  } else if (p == positional_option_t::TYPE) {
+    option_t<std::string> o = {0, positional_parameter_name, "", ""};
+    string_options.push_back(o);
+  } else {
+    assert(false && "unknown positional_option_t");
+  }
 }
 
 namespace spirit = boost::spirit;
