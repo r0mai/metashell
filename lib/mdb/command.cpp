@@ -74,12 +74,29 @@ struct command::command_grammar : qi::grammar<Iterator, skipper_t> {
     self(self),
     result(result)
   {
+    using qi::eoi;
+    using qi::char_;
+    using qi::lexeme;
+
+    using phx::ref;
+
+    if (self.positional_option == positional_option_t::NONE) {
+      positional_rule = eoi;
+    } else if (self.positional_option == positional_option_t::TYPE) {
+//      auto& pos_ref = 
+      positional_rule = lexeme[*char_];
+    } else if (self.positional_option == positional_option_t::NUMERIC) {
+
+    } else {
+      assert(false && "unknown positional_option_t");
+    }
   }
 
   const command& self;
   parsed_command& result;
 
   qi::rule<Iterator, skipper_t> start;
+  qi::rule<Iterator, skipper_t> positional_rule;
 };
 
 parsed_command command::parse_options(const std::string& input) const {
