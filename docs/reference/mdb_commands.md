@@ -20,7 +20,7 @@ Evaluating a metaprogram using the `-full` qualifier will expand all
   The qualifier `-profile` is intentionally undocumented. It is only used for
   internal profiling, and could be changed or removed at any time.
 
-* __`step [over|out] [n]`__ <br />
+* __`step|s [over|out] [n]`__ <br />
 Step the program. <br />
 Argument n means step n times. n defaults to 1 if not specified.
   Negative n means step the program backwards.

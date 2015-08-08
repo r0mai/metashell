@@ -107,7 +107,7 @@ const mdb_command_handler_map mdb_shell::command_handler =
         "explicitly enter `metashell::format< <type> >::type` for the same effect.\n\n"
         "The qualifier `-profile` is intentionally undocumented. It is only used for\n"
         "internal profiling, and could be changed or removed at any time."},
-      {{"step"}, repeatable, callback(&mdb_shell::command_step),
+      {{"step", "s"}, repeatable, callback(&mdb_shell::command_step),
         "[over|out] [n]",
         "Step the program.",
         "Argument n means step n times. n defaults to 1 if not specified.\n"
