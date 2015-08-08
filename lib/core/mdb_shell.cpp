@@ -144,6 +144,10 @@ const mdb_command_handler_map mdb_shell::command_handler =
         "",
         "Print backtrace from the current point.",
         ""},
+      {{"stats"}, non_repeatable, callback(&mdb_shell::command_stats),
+        "",
+        "Print some stats about the current metaprogram",
+        ""},
       {{"help"}, non_repeatable, callback(&mdb_shell::command_help),
         "[<command>]",
         "Show help for commands.",
@@ -716,6 +720,35 @@ void mdb_shell::command_rbreak(
   } catch (const boost::regex_error&) {
     displayer_.show_error("\"" + arg + "\" is not a valid regex");
   }
+}
+
+void mdb_shell::command_stats(
+    const std::string& arg,
+    iface::displayer& displayer_)
+{
+  if (!require_empty_args(arg, displayer_) ||
+      !require_evaluated_metaprogram(displayer_))
+  {
+    return;
+  }
+
+  std::stringstream ss;
+  ss << "Statistics for the whole translation unit:\n";
+  ss << "Number of distinct types instantiated = " <<
+    mp->get_num_vertices() << '\n';
+  ss << "Number of instantiation and memoizations = " <<
+    mp->get_num_edges() << '\n';
+
+  metaprogram::vertices_size_type vertex_count;
+  metaprogram::edges_size_type edge_count;
+
+  std::tie(vertex_count, edge_count) = mp->get_enabled_num_vertices_and_edges();
+
+  ss << "Statistics for the evaluated metaprogram:\n";
+  ss << "Number of distinct types instantiated = " << vertex_count << '\n';
+  ss << "Number of instantiation and memoizations = " << edge_count << '\n';
+
+  displayer_.show_raw_text(ss.str());
 }
 
 void mdb_shell::command_help(

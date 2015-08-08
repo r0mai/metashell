@@ -66,6 +66,7 @@ public:
   );
   void command_backtrace(const std::string& arg, iface::displayer& displayer_);
   void command_rbreak(const std::string& arg, iface::displayer& displayer_);
+  void command_stats(const std::string& arg, iface::displayer& displayer_);
   void command_help(const std::string& arg, iface::displayer& displayer_);
   void command_quit(const std::string& arg, iface::displayer& displayer_);
 

@@ -156,6 +156,10 @@ public:
 
   vertices_size_type get_num_vertices() const;
   edges_size_type get_num_edges() const;
+
+  std::tuple<vertices_size_type, edges_size_type>
+    get_enabled_num_vertices_and_edges() const;
+
   degree_size_type get_enabled_in_degree(vertex_descriptor vertex) const;
   degree_size_type get_enabled_out_degree(vertex_descriptor vertex) const;
 

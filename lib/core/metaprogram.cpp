@@ -79,7 +79,7 @@ const data::type_or_error& metaprogram::get_evaluation_result() const {
 }
 
 void metaprogram::reset_state() {
-  unsigned vertex_count = get_num_vertices();
+  auto vertex_count = get_num_vertices();
   assert(vertex_count > 0);
 
   state.discovered = discovered_t(vertex_count, false);
@@ -219,6 +219,41 @@ metaprogram::vertices_size_type metaprogram::get_num_vertices() const {
 
 metaprogram::edges_size_type metaprogram::get_num_edges() const {
   return boost::num_edges(graph);
+}
+
+std::tuple<metaprogram::vertices_size_type, metaprogram::edges_size_type>
+  metaprogram::get_enabled_num_vertices_and_edges() const
+{
+  vertices_size_type vertex_count = 0;
+  edges_size_type edge_count = 0;
+
+  edge_stack_t edge_stack;
+  edge_stack.push(boost::none);
+
+  discovered_t discovered(get_num_vertices());
+
+  while (!edge_stack.empty()) {
+    optional_edge_descriptor edge = edge_stack.top();
+    vertex_descriptor vertex = edge ? get_target(*edge) : get_root_vertex();
+
+    edge_stack.pop();
+
+    if (discovered[vertex]) {
+      continue;
+    }
+    ++vertex_count;
+
+    // we don't take full mode into account here
+    discovered[vertex] = true;
+
+    for (const metaprogram::edge_descriptor& out_edge : get_out_edges(vertex)) {
+      if (get_edge_property(out_edge).enabled) {
+        ++edge_count;
+        edge_stack.push(out_edge);
+      }
+    }
+  }
+  return std::make_tuple(vertex_count, edge_count);
 }
 
 metaprogram::degree_size_type metaprogram::get_enabled_in_degree(
