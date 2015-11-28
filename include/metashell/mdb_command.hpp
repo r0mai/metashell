@@ -34,7 +34,7 @@ enum class repeatable_t {
 
 class mdb_command {
 public:
-  typedef std::vector<std::string> keys_t;
+  typedef std::vector<std::vector<std::string>> keys_t;
   typedef std::function<
     void(mdb_shell&, const std::string&, iface::displayer&)> function;
 

@@ -32,7 +32,7 @@ mdb_command_handler_map::mdb_command_handler_map(
 {
   std::vector<key_command_map_t::value_type> key_command_vec;
   for (std::size_t i = 0; i < commands.size(); ++i) {
-    for (const std::string& key : commands[i].get_keys()) {
+    for (const std::string& key : commands[i].get_keys()[0]) { // TODO keys
       key_command_vec.push_back(key_command_map_t::value_type(key, i));
     }
   }

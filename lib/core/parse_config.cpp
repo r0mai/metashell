@@ -97,7 +97,7 @@ namespace
     for (const mdb_command& cmd : commands)
     {
       std::cout
-        << "* __`" << join(cmd.get_keys(), "|") << " "
+        << "* __`" << join(cmd.get_keys()[0], "|") << " " // TODO keys
         << cmd.get_usage() <<  "`__ <br />\n"
         << cmd.get_short_description();
       if (!cmd.get_long_description().empty()) {

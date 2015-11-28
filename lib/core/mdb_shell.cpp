@@ -93,7 +93,7 @@ namespace metashell {
 const mdb_command_handler_map mdb_shell::command_handler =
   mdb_command_handler_map(
     {
-      {{"evaluate"}, repeatable_t::non_repeatable,
+      {{{"evaluate"}}, repeatable_t::non_repeatable,
         callback(&mdb_shell::command_evaluate),
         "[-full|-profile] [<type>|-]",
         "Evaluate and start debugging a new metaprogram.",
@@ -109,7 +109,7 @@ const mdb_command_handler_map mdb_shell::command_handler =
         "Unlike metashell, evaluate doesn't use metashell::format to avoid cluttering\n"
         "the debugged metaprogram with unrelated code. If you need formatting, you can\n"
         "explicitly enter `metashell::format< <type> >::type` for the same effect."},
-      {{"step"}, repeatable_t::repeatable,
+      {{{"step"}}, repeatable_t::repeatable,
         callback(&mdb_shell::command_step),
         "[over|out] [n]",
         "Step the program.",
@@ -118,7 +118,7 @@ const mdb_command_handler_map mdb_shell::command_handler =
         "`step over` is an alias for next.\n"
         "Use of the `out` qualifier will jump out of the current instantiation frame.\n"
         "Similarly to `next`, `step out -1` is not always the inverse of `step out`."},
-      {{"next"}, repeatable_t::repeatable,
+      {{{"next"}}, repeatable_t::repeatable,
         callback(&mdb_shell::command_next),
         "[n]",
         "Jump over to the next instantiation skipping sub instantiations.",
@@ -129,50 +129,50 @@ const mdb_command_handler_map mdb_shell::command_handler =
         "by the current parent, then `next` will behave like a normal `step`,\n"
         "and will step out of one or more instantiation frames.\n\n"
         "`step over` is an alias for next."},
-      {{"rbreak"}, repeatable_t::non_repeatable,
+      {{{"rbreak"}}, repeatable_t::non_repeatable,
         callback(&mdb_shell::command_rbreak),
         "<regex>",
         "Add breakpoint for all types matching `<regex>`.",
         ""},
-      {{"break"}, repeatable_t::non_repeatable,
+      {{{"break"}}, repeatable_t::non_repeatable,
         callback(&mdb_shell::command_break),
         "list",
         "List breakpoints.",
         ""},
-      {{"continue"}, repeatable_t::repeatable,
+      {{{"continue"}}, repeatable_t::repeatable,
         callback(&mdb_shell::command_continue),
         "[n]",
         "Continue program being debugged.",
         "The program is continued until the nth breakpoint or the end of the program\n"
         "is reached. n defaults to 1 if not specified.\n"
         "Negative n means continue the program backwards."},
-      {{"finish"}, repeatable_t::repeatable,
+      {{{"finish"}}, repeatable_t::repeatable,
         callback(&mdb_shell::command_finish),
         "",
         "Finish program being debugged.",
         "The program is continued until the end ignoring any breakpoints."},
-      {{"forwardtrace", "ft"}, repeatable_t::non_repeatable,
+      {{{"forwardtrace"}, {"ft"}}, repeatable_t::non_repeatable,
         callback(&mdb_shell::command_forwardtrace),
         "[n]",
         "Print forwardtrace from the current point.",
         "The n specifier limits the depth of the trace. If n is not specified, then the\n"
         "trace depth is unlimited."},
-      {{"backtrace", "bt"}, repeatable_t::non_repeatable,
+      {{{"backtrace"}, {"bt"}}, repeatable_t::non_repeatable,
         callback(&mdb_shell::command_backtrace),
         "",
         "Print backtrace from the current point.",
         ""},
-      {{"frame", "f"}, repeatable_t::non_repeatable,
+      {{{"frame"}, {"f"}}, repeatable_t::non_repeatable,
         callback(&mdb_shell::command_frame),
         "n",
         "Inspect the nth frame of the current backtrace.",
         ""},
-      {{"help"}, repeatable_t::non_repeatable,
+      {{{"help"}}, repeatable_t::non_repeatable,
         callback(&mdb_shell::command_help),
         "[<command>]",
         "Show help for commands.",
         "If <command> is not specified, show a list of all available commands."},
-      {{"quit"} , repeatable_t::non_repeatable,
+      {{{"quit"}} , repeatable_t::non_repeatable,
         callback(&mdb_shell::command_quit),
         "",
         "Quit metadebugger.",
@@ -825,7 +825,7 @@ void mdb_shell::command_help(
     displayer_.show_raw_text("");
     for (const mdb_command& cmd : command_handler.get_commands()) {
       displayer_.show_raw_text(
-          cmd.get_keys().front() + " -- " +
+          cmd.get_keys()[0].front() + " -- " + // TODO keys
           cmd.get_short_description());
     }
     displayer_.show_raw_text("");
@@ -859,7 +859,7 @@ void mdb_shell::command_help(
     return;
   }
 
-  displayer_.show_raw_text(join(cmd.get_keys(), "|") + " " + cmd.get_usage());
+  displayer_.show_raw_text(join(cmd.get_keys()[0], "|") + " " + cmd.get_usage()); // TODO keys
   displayer_.show_raw_text(cmd.get_full_description());
 }
 
