@@ -26,6 +26,17 @@
 
 namespace metashell {
 
+namespace {
+
+std::string get_rest(std::stringstream& ss) {
+  ss >> std::ws;
+  std::string rest;
+  std::getline(ss, rest);
+  return rest;
+}
+
+} // anonymous namespace
+
 mdb_command_handler_map::mdb_command_handler_map(
     const commands_t& commands_arg) :
   commands(commands_arg)
@@ -43,11 +54,32 @@ boost::optional<std::tuple<mdb_command, std::string>>
 mdb_command_handler_map::get_command_for_line(
     const std::string& line) const
 {
-
   std::stringstream line_stream(line);
-  std::string command;
 
-  if (!(line_stream >> command)) {
+  size_t command_index = 0;
+  commands_t command_candidates = commands;
+  for (;; ++command_index) {
+    if (command_candidates.size() == 1) {
+      return command_candidates.front();
+    }
+    if (command_candidates.size() == 0) {
+      return boost::none;
+    }
+
+    std::string next_command;
+    while (line_stream >> next_command) {
+
+    }
+  }
+
+  std::vector<std::string> commands;
+
+  std::string command;
+  while (line_stream >> command) {
+    commands.push_back(command);
+  }
+
+  if (commands.empty()) {
     return boost::none;
   }
 
