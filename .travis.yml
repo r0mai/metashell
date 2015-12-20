@@ -5,6 +5,11 @@ os:
 compiler:
   - gcc
   - clang
+
+# To avoid building everything twice for a PR
+branches:
+  except: /pr\/.*/
+
 addons:
   apt:
     sources:
