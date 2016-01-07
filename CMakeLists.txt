@@ -35,11 +35,17 @@ include(Platform)
 
 # Windows workaround
 if (WIN32)
-  add_definitions( -DNOMINMAX )
+  add_definitions(-DNOMINMAX)
 endif()
 
 # Warnings, C++11, etc
 include(Compiler)
+
+# Used to inject ccache into the build system
+if (COMPILER_LAUNCHER)
+  set_property(GLOBAL PROPERTY RULE_LAUNCH_COMPILE ${COMPILER_LAUNCHER})
+  set_property(GLOBAL PROPERTY RULE_LAUNCH_LINK ${COMPILER_LAUNCHER})
+endif()
 
 # Workaround on some systems (OSX + clang + Boost 1.55)
 add_definitions(-DBOOST_ATOMIC_FORCE_FALLBACK=1)
@@ -72,6 +78,7 @@ if (ENABLE_PROFILING)
     set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -pg")
   endif()
 endif()
+
 
 # The "internal" Templight build
 set(TEMPLIGHT_BUILD "${CMAKE_SOURCE_DIR}/3rd/templight/build")
