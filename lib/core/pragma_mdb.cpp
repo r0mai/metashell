@@ -37,7 +37,9 @@ iface::pragma_handler* pragma_mdb::clone() const
   return new pragma_mdb(_shell, _cpq, _mdb_temp_dir, _logger);
 }
 
-std::string pragma_mdb::arguments() const { return "[-full] [<type>]"; }
+std::string pragma_mdb::arguments() const {
+  return "[-full|-profile] [<type>|-]";
+}
 
 std::string pragma_mdb::description() const
 {
