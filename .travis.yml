@@ -23,5 +23,8 @@ addons:
       - python-yaml
       - clang-format-3.7
       - clang-tidy-3.7
+install:
+  - brew update >/dev/null
+  - travis_wait 50 brew install llvm --with-clang --with-clang-extra-tools
 script:
   - tools/travis/${TRAVIS_OS_NAME}.sh

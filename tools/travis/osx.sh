@@ -4,7 +4,8 @@ set -ex
 
 brew update >/dev/null
 brew install p7zip
-brew upgrade cmake
+brew install clang-format
+brew install llvm --with-clang --with-clang-extra-tools
 
 if [ "$CXX" = "g++" ]; then
   brew install homebrew/versions/gcc5
@@ -17,6 +18,17 @@ git fetch --tags
 git tag
 egrep $(tools/latest_release --no_dots --prefix=version-) README.md
 egrep $(tools/latest_release --no_dots --prefix=version-) docs/index.md
+
+# Do static validations
+
+sudo pip install pep8 pylint gitpython daemonize mkdocs
+tools/validate/all_static.sh
+
+# clang-tidy
+cd bin
+  ../tools/clang_tidy.sh | tee clang_tidy_output.txt
+  [ ! -s clang_tidy_output.txt ]
+cd ..
 
 # Get the templight binary
 
