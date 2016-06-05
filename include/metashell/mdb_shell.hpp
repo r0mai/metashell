@@ -22,6 +22,7 @@
 #include <metashell/boost/regex.hpp>
 #include <boost/optional.hpp>
 
+#include <metashell/shell.hpp>
 #include <metashell/breakpoint.hpp>
 #include <metashell/metaprogram.hpp>
 #include <metashell/mdb_command_handler_map.hpp>
@@ -51,8 +52,9 @@ namespace metashell
               const boost::filesystem::path& env_path_,
               const boost::filesystem::path& mdb_temp_dir_,
               logger* logger_,
-              std::unique_ptr<iface::destroyable> keep_alive_with_shell_ =
-                  std::unique_ptr<iface::destroyable>());
+              shell& shell);
+
+    virtual void teardown(iface::displayer& displayer_) override;
 
     virtual std::string prompt() const override;
     virtual bool stopped() const override;

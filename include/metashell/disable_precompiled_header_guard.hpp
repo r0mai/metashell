@@ -18,20 +18,16 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <metashell/shell.hpp>
-#include <metashell/iface/destroyable.hpp>
 
 #include <memory>
 
 namespace metashell
 {
-  class disable_precompiled_header_guard : public iface::destroyable
+  class disable_precompiled_header_guard
   {
   public:
     explicit disable_precompiled_header_guard(shell& shell_);
-    ~disable_precompiled_header_guard();
-
-    static std::unique_ptr<disable_precompiled_header_guard>
-    create(shell& shell_);
+    void teardown();
 
   private:
     shell& _shell;

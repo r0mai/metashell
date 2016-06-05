@@ -35,6 +35,14 @@ void command_processor_queue::pop(iface::displayer& displayer_)
 {
   assert(!empty());
 
+  try
+  {
+    _items.back()->teardown();
+  catch (const std::exception& e) {
+  {
+    displayer_.show_error(std::string("Error: ") + e.what());
+  }
+
   _items.pop_back();
   displayer_.show_raw_text("");
 }

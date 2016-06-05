@@ -28,17 +28,10 @@ disable_precompiled_header_guard::disable_precompiled_header_guard(
   }
 }
 
-disable_precompiled_header_guard::~disable_precompiled_header_guard()
+disable_precompiled_header_guard::teardown()
 {
   if (_was_using)
   {
     _shell.using_precompiled_headers(true);
   }
-}
-
-std::unique_ptr<disable_precompiled_header_guard>
-disable_precompiled_header_guard::create(shell& shell_)
-{
-  return std::unique_ptr<disable_precompiled_header_guard>(
-      new disable_precompiled_header_guard(shell_));
 }

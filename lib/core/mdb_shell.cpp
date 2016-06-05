@@ -171,16 +171,20 @@ namespace metashell
       const boost::filesystem::path& env_path_,
       const boost::filesystem::path& mdb_temp_dir_,
       logger* logger_,
-      std::unique_ptr<iface::destroyable> keep_alive_with_shell_)
+      shell& shell)
     : conf(conf_),
       env(env_arg),
       _logger(logger_),
       _engine(engine_),
       _env_path(env_path_),
       _mdb_temp_dir(mdb_temp_dir_),
-      _keep_alive_with_shell(std::move(keep_alive_with_shell_))
+      _shell(shell)
   {
     assert(!conf.use_precompiled_headers);
+  }
+
+  void mdb_shell::teardown(iface::displayer& displayer_) {
+    std::cerr << "In teardown()" << std::endl;
   }
 
   std::string mdb_shell::prompt() const { return "(mdb)"; }

@@ -31,6 +31,7 @@ namespace metashell
     {
     public:
       virtual ~command_processor() {}
+      virtual void teardown(iface::displayer& displayer_) {}
 
       virtual void line_available(const std::string& cmd_,
                                   iface::displayer& displayer_,
