@@ -104,7 +104,8 @@ namespace
                const boost::filesystem::path& internal_dir_)
   {
     std::vector<std::string> result{
-        "__has_include_next(_)=0", "__has_feature(_)=0"};
+        "__has_include_next(_)=0", "__has_feature(x)=__has_feature_impl_ ## x",
+        "__has_feature_impl_cxx_rvalue_references=1"};
 
     metashell::empty_environment env(internal_dir_);
     const metashell::data::cpp_code defines =
