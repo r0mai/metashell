@@ -20,6 +20,7 @@
 #include <metashell/process/run.hpp>
 
 #include <boost/algorithm/string/join.hpp>
+#include <boost/filesystem.hpp>
 #include <boost/range/adaptor/sliced.hpp>
 #include <boost/range/adaptor/transformed.hpp>
 
@@ -187,13 +188,17 @@ namespace
     }
     else
     {
+      using boost::filesystem::canonical;
+
+      // canonicalize paths, because boost::wave can't deal with .. in paths
+      // when parsing #include_next directives
       if (env_detector_.on_osx())
       {
-        result.push_back(dir_of_executable / ".." / "include" / "metashell" /
-                         "libcxx");
+        result.push_back(canonical(dir_of_executable / ".." / "include" /
+                                   "metashell" / "libcxx"));
       }
-      result.push_back(dir_of_executable / ".." / "include" / "metashell" /
-                       "templight");
+      result.push_back(canonical(dir_of_executable / ".." / "include" /
+                                 "metashell" / "templight"));
     }
 
     METASHELL_LOG(
