@@ -126,7 +126,8 @@ namespace
         boost::wave::support_option_emit_line_directives |
         boost::wave::support_option_include_guard_detection |
         boost::wave::support_option_emit_pragma_directives |
-        boost::wave::support_option_insert_whitespace));
+        boost::wave::support_option_insert_whitespace |
+        boost::wave::support_option_no_newline_at_end_of_file));
     for (auto i = ctx.macro_names_begin(); i != ctx.macro_names_end(); ++i)
     {
       def_collector.blacklist(*i);

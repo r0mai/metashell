@@ -73,7 +73,8 @@ namespace
             token_iterator::value_type::position_type(input_filename.c_str()),
             boost::wave::language_support(
                 boost::wave::support_cpp |
-                boost::wave::support_option_long_long));
+                boost::wave::support_option_long_long |
+                boost::wave::support_option_no_newline_at_end_of_file));
         update_current_token();
       }
       catch (const boost::wave::cpplexer::lexing_exception&)

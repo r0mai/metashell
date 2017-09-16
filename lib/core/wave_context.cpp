@@ -49,7 +49,8 @@ namespace
             boost::wave::support_option_emit_line_directives |
             boost::wave::support_option_include_guard_detection |
             boost::wave::support_option_emit_pragma_directives |
-            boost::wave::support_option_insert_whitespace);
+            boost::wave::support_option_insert_whitespace |
+            boost::wave::support_option_no_newline_at_end_of_file);
         break;
       case metashell::data::wave_standard::cpp11:
         lng_ = boost::wave::language_support(
@@ -59,7 +60,8 @@ namespace
             boost::wave::support_option_emit_line_directives |
             boost::wave::support_option_include_guard_detection |
             boost::wave::support_option_emit_pragma_directives |
-            boost::wave::support_option_insert_whitespace);
+            boost::wave::support_option_insert_whitespace |
+            boost::wave::support_option_no_newline_at_end_of_file);
         break;
       }
     }
