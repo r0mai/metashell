@@ -14,6 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+#include <metashell/canonical_path.hpp>
 #include <metashell/clang_binary.hpp>
 #include <metashell/has_prefix.hpp>
 #include <metashell/metashell.hpp>
@@ -188,17 +189,15 @@ namespace
     }
     else
     {
-      using boost::filesystem::canonical;
-
       // canonicalize paths, because boost::wave can't deal with .. in paths
       // when parsing #include_next directives
       if (env_detector_.on_osx())
       {
-        result.push_back(canonical(dir_of_executable / ".." / "include" /
-                                   "metashell" / "libcxx"));
+        result.push_back(canonical_path(dir_of_executable / ".." / "include" /
+                                        "metashell" / "libcxx"));
       }
-      result.push_back(canonical(dir_of_executable / ".." / "include" /
-                                 "metashell" / "templight"));
+      result.push_back(canonical_path(dir_of_executable / ".." / "include" /
+                                      "metashell" / "templight"));
     }
 
     METASHELL_LOG(
