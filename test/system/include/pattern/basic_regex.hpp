@@ -32,6 +32,7 @@ namespace pattern
     }
 
     const std::basic_string<CharT>& value() const { return _exp; }
+
   private:
     std::basic_string<CharT> _exp;
   };

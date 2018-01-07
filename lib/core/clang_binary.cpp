@@ -353,12 +353,11 @@ data::result metashell::eval(
     clang_args.push_back(templight_dump_path_->string());
   }
 
-  const data::process_output output =
-      run_clang(clang_binary_, clang_args,
-                tmp_exp_ ?
-                    env_.get_appended("::metashell::impl::wrap< " + *tmp_exp_ +
-                                      " > __metashell_v;\n") :
-                    env_.get());
+  const data::process_output output = run_clang(
+      clang_binary_, clang_args,
+      tmp_exp_ ? env_.get_appended("::metashell::impl::wrap< " + *tmp_exp_ +
+                                   " > __metashell_v;\n") :
+                 env_.get());
 
   const bool success = output.exit_code == data::exit_code_t(0);
 

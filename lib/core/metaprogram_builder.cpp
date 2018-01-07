@@ -119,11 +119,11 @@ namespace metashell
                                        mp.get_root_vertex() :
                                        mp.get_target(edge_stack.top());
 
-    auto edge =
-        mp.add_edge(top_vertex, vertex, arg.type == data::include_type::sys ?
-                                            data::event_kind::sys_include :
-                                            data::event_kind::quote_include,
-                    point_of_event, timestamp);
+    auto edge = mp.add_edge(top_vertex, vertex,
+                            arg.type == data::include_type::sys ?
+                                data::event_kind::sys_include :
+                                data::event_kind::quote_include,
+                            point_of_event, timestamp);
     edge_stack.push(edge);
   }
 

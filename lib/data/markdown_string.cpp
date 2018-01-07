@@ -186,11 +186,11 @@ namespace metashell
 
     std::string unformat(const markdown_string& s_)
     {
-      using boost::xpressive::sregex;
-      using boost::xpressive::regex_replace;
       using boost::xpressive::as_xpr;
+      using boost::xpressive::regex_replace;
       using boost::xpressive::s1;
       using boost::xpressive::s2;
+      using boost::xpressive::sregex;
 
       std::string s(s_.value());
 
@@ -198,8 +198,9 @@ namespace metashell
       boost::replace_all(s, "<br />", "\n");
       boost::replace_all(s, "&nbsp;", " ");
 
-      return regex_replace(s, sregex('[' >> (s1 = *~as_xpr(']')) >> "](" >>
-                                     (s2 = *~as_xpr(')')) >> ')'),
+      return regex_replace(s,
+                           sregex('[' >> (s1 = *~as_xpr(']')) >> "](" >>
+                                  (s2 = *~as_xpr(')')) >> ')'),
                            "$1 (see $2)");
     }
   }

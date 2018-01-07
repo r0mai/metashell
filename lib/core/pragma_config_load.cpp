@@ -16,7 +16,6 @@
 
 #include <metashell/comment_json_writer.hpp>
 #include <metashell/exception.hpp>
-#include <metashell/exception.hpp>
 #include <metashell/pragma_config_load.hpp>
 #include <metashell/shell.hpp>
 

@@ -88,14 +88,14 @@ namespace
     {
       displayer_.show_comment(data::text{type_ + ":"});
 
-      displayer_.show_cpp_code(
-          data::cpp_code(boost::algorithm::join(
-                             paths_ | boost::adaptors::transformed([](
-                                          const data::include_argument& a_) {
-                               return "#include " + data::include_code(a_);
-                             }),
-                             "\n") +
-                         (extra_new_line_ ? "\n" : "")));
+      displayer_.show_cpp_code(data::cpp_code(
+          boost::algorithm::join(
+              paths_ | boost::adaptors::transformed(
+                           [](const data::include_argument& a_) {
+                             return "#include " + data::include_code(a_);
+                           }),
+              "\n") +
+          (extra_new_line_ ? "\n" : "")));
     }
   }
 }

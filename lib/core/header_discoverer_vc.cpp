@@ -35,8 +35,8 @@ namespace
 {
   boost::optional<std::string> include_path_addition(const std::string& arg_)
   {
-    using boost::algorithm::starts_with;
     using boost::algorithm::ends_with;
+    using boost::algorithm::starts_with;
 
     if ((starts_with(arg_, "\"/I") || starts_with(arg_, "/I\"")) &&
         ends_with(arg_, "\""))
@@ -99,8 +99,8 @@ namespace metashell
   std::set<boost::filesystem::path>
   header_discoverer_vc::files_included_by(const data::cpp_code& exp_)
   {
-    using boost::xpressive::bos;
     using boost::xpressive::as_xpr;
+    using boost::xpressive::bos;
 
     const data::process_output output =
         run_vc(_vc_binary, {"/showIncludes"}, exp_);

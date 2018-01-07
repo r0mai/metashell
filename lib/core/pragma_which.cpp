@@ -47,9 +47,9 @@ void pragma_which::run(const data::command::iterator& name_begin_,
                        const data::command::iterator& args_end_,
                        iface::displayer& displayer_) const
 {
-  using boost::filesystem::path;
-  using boost::adaptors::transformed;
   using boost::adaptors::filtered;
+  using boost::adaptors::transformed;
+  using boost::filesystem::path;
 
   const parsed_arguments args =
       parse_arguments(data::tokens_to_string(name_begin_, name_end_).value(),

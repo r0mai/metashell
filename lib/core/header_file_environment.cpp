@@ -98,8 +98,8 @@ namespace
 
   std::string include_formatter(const std::string& name_)
   {
-    using std::string;
     using boost::filesystem::path;
+    using std::string;
 
     return "#include <" +
            (path("metashell") / "formatter" / (name_ + ".hpp")).string() + ">";
@@ -107,8 +107,8 @@ namespace
 
   void add_internal_headers(data::headers& headers_)
   {
-    using boost::algorithm::join;
     using boost::adaptors::transformed;
+    using boost::algorithm::join;
     using boost::filesystem::path;
 
     using std::string;

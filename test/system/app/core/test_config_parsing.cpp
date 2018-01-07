@@ -140,8 +140,8 @@ TEST(config_parsing, errors)
   for (sp p : {sp("integer", "13"), sp("double", "13.1"), sp("bool", "true"),
                sp("string", "\"hello\"")})
   {
-    ASSERT_EQ("JSON parsing failed: Unexpected " + p.first + " element: " +
-                  p.second + nl,
+    ASSERT_EQ("JSON parsing failed: Unexpected " + p.first +
+                  " element: " + p.second + nl,
               t.error_with_configs({p.second}));
   }
 

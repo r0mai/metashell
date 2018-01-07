@@ -44,6 +44,7 @@ namespace metashell
     }
 
     const ValueType* operator->() { return &**this; }
+
   private:
     boost::optional<ValueType> _value;
     std::function<ValueType()> _getter;

@@ -348,9 +348,9 @@ namespace metashell
     metaprogram::get_filtered_out_edges(vertex_descriptor vertex) const
     {
       using boost::adaptors::filtered;
-      using boost::range::sort;
-      using boost::range::reverse;
       using boost::copy_range;
+      using boost::range::reverse;
+      using boost::range::sort;
 
       auto is_enabled = [this](edge_descriptor edge) {
         return get_edge_property(edge).enabled;

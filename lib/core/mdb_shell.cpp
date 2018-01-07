@@ -380,11 +380,11 @@ namespace metashell
       return;
     }
 
-    using boost::spirit::qi::lit;
-    using boost::spirit::qi::int_;
-    using boost::spirit::ascii::space;
     using boost::phoenix::ref;
+    using boost::spirit::ascii::space;
     using boost::spirit::qi::_1;
+    using boost::spirit::qi::int_;
+    using boost::spirit::qi::lit;
 
     auto begin = arg.begin(), end = arg.end();
 
@@ -761,10 +761,10 @@ namespace metashell
       return;
     }
 
-    using boost::spirit::qi::lit;
-    using boost::spirit::qi::uint_;
     using boost::spirit::ascii::space;
     using boost::spirit::qi::_1;
+    using boost::spirit::qi::lit;
+    using boost::spirit::qi::uint_;
 
     namespace phx = boost::phoenix;
 
@@ -977,10 +977,10 @@ namespace metashell
   mdb_shell::parse_defaultable_integer(const std::string& arg,
                                        int default_value)
   {
-    using boost::spirit::qi::int_;
-    using boost::spirit::ascii::space;
     using boost::phoenix::ref;
+    using boost::spirit::ascii::space;
     using boost::spirit::qi::_1;
+    using boost::spirit::qi::int_;
 
     auto begin = arg.begin(), end = arg.end();
 
@@ -1002,10 +1002,10 @@ namespace metashell
   boost::optional<int>
   mdb_shell::parse_mandatory_integer(const std::string& arg)
   {
-    using boost::spirit::qi::int_;
-    using boost::spirit::ascii::space;
     using boost::phoenix::ref;
+    using boost::spirit::ascii::space;
     using boost::spirit::qi::_1;
+    using boost::spirit::qi::int_;
 
     auto begin = arg.begin(), end = arg.end();
 

@@ -35,6 +35,7 @@ namespace metashell
 
     const T& value() const { return _value; }
     int id() const { return _id; }
+
   private:
     T _value;
     int _id;

@@ -157,6 +157,7 @@ namespace
     const std::set<std::string>& directories() const { return _directories; }
 
     const std::set<std::string>& header_files() const { return _header_files; }
+
   private:
     std::set<std::string> _directories;
     std::set<std::string> _header_files;

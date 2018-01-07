@@ -34,9 +34,9 @@ namespace
   call_grph fib5_call_graph()
   {
     using metashell::data::event_kind;
-    using metashell::data::type;
-    using metashell::data::frame;
     using metashell::data::file_location;
+    using metashell::data::frame;
+    using metashell::data::type;
 
     file_location f("a.cpp", 1, 2);
     file_location f2("b.hpp", 1, 2);

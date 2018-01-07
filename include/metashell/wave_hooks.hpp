@@ -41,7 +41,7 @@
 namespace metashell
 {
   class wave_hooks
-      : public boost::wave::context_policies::eat_whitespace<wave_token>
+    : public boost::wave::context_policies::eat_whitespace<wave_token>
   {
   public:
     int lines_of_env = 0;

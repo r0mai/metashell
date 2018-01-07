@@ -67,10 +67,11 @@ namespace
     const auto includes_begin =
         next(beginning_of_includes<Type>(lines_begin_, lines_end_), lines_end_);
 
-    transform(includes_begin, find_if(includes_begin, lines_end_,
-                                      [](const std::string& line_) {
-                                        return !starts_with(line_, " ");
-                                      }),
+    transform(includes_begin,
+              find_if(includes_begin, lines_end_,
+                      [](const std::string& line_) {
+                        return !starts_with(line_, " ");
+                      }),
               back_inserter(result),
               [](const std::string& s_) { return trim_copy(s_); });
 

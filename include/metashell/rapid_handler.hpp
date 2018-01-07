@@ -170,6 +170,7 @@ namespace metashell
     }
 
     void not_empty() { _empty = false; }
+
   private:
     bool _empty = true;
     bool _failed = false;

@@ -62,9 +62,9 @@ namespace
                  data::command::iterator begin_,
                  const data::command::iterator& end_)
   {
+    using boost::optional;
     using std::string;
     using std::vector;
-    using boost::optional;
 
     const vector<string>::const_iterator e = name_.end();
     vector<string>::const_iterator i = name_.begin();
@@ -158,12 +158,13 @@ void pragma_handler_map::process(const data::command::iterator& begin_,
   if (longest_fit_handler)
   {
     longest_fit_handler->run(
-        begin_, find_last_if(begin_, longest_fit_begin,
-                             [](const data::token& token_) {
-                               return token_.category() !=
-                                      data::token_category::whitespace;
-                             }) +
-                    1,
+        begin_,
+        find_last_if(begin_, longest_fit_begin,
+                     [](const data::token& token_) {
+                       return token_.category() !=
+                              data::token_category::whitespace;
+                     }) +
+            1,
         longest_fit_begin, e, displayer_);
   }
   else

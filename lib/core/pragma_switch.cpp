@@ -99,8 +99,8 @@ void pragma_switch::run(const data::command::iterator&,
     }
     else
     {
-      displayer_.show_error("Invalid argument " + v + ". Valid values are: " +
-                            valid_arguments());
+      displayer_.show_error("Invalid argument " + v +
+                            ". Valid values are: " + valid_arguments());
     }
   }
   displayer_.show_comment(

@@ -130,8 +130,8 @@ namespace metashell
     using boost::starts_with;
 
     using std::pair;
-    using std::string;
     using std::set;
+    using std::string;
 
     METASHELL_LOG(_logger, "Code completion of " + src_);
 

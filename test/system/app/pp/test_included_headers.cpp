@@ -77,10 +77,11 @@ namespace
     filename_set
     filenames(const std::vector<boost::filesystem::path>& filenames_)
     {
-      return filename_set(filenames_ | boost::adaptors::transformed([this](
-                                           const boost::filesystem::path& p_) {
-                            return this->relative(p_);
-                          }));
+      return filename_set(filenames_ |
+                          boost::adaptors::transformed(
+                              [this](const boost::filesystem::path& p_) {
+                                return this->relative(p_);
+                              }));
     }
 
   private:

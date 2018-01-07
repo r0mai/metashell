@@ -59,8 +59,8 @@ namespace
   boost::optional<std::string> output_line_of(const std::string& filename_,
                                               const std::string& line_)
   {
-    using boost::xpressive::bos;
     using boost::xpressive::_d;
+    using boost::xpressive::bos;
 
     const boost::xpressive::sregex error_report = bos >> '(' >> +_d >> "): ";
 

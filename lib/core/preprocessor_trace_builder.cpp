@@ -187,9 +187,10 @@ namespace metashell
   void preprocessor_trace_builder::on_token_generated(
       const data::token& t_, const data::file_location& source_location_)
   {
-    _builder.handle_token_generation(t_, _num_tokens_from_macro_call > 0 ?
-                                             _last_macro_call_loc :
-                                             source_location_,
+    _builder.handle_token_generation(t_,
+                                     _num_tokens_from_macro_call > 0 ?
+                                         _last_macro_call_loc :
+                                         source_location_,
                                      source_location_, std::time(nullptr));
     if (_num_tokens_from_macro_call > 0)
     {

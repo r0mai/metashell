@@ -116,8 +116,8 @@ namespace
                                   iface::type_shell& type_shell_,
                                   logger* logger_)
   {
-    using std::string;
     using std::pair;
+    using std::string;
 
     METASHELL_LOG(
         logger_,

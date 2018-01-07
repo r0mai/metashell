@@ -41,8 +41,8 @@
 namespace
 {
   class macro_definition_collector
-      : public boost::wave::context_policies::eat_whitespace<
-            metashell::wave_token>
+    : public boost::wave::context_policies::eat_whitespace<
+          metashell::wave_token>
   {
   public:
     explicit macro_definition_collector(std::vector<std::string>& out_)
@@ -169,8 +169,9 @@ namespace
     const std::vector<std::string> extra_clang_args;
 
     const metashell::clang_binary cbin(
-        true, find_clang(true, extra_clang_args, metashell_binary_, "internal",
-                         env_detector_, displayer_, logger_),
+        true,
+        find_clang(true, extra_clang_args, metashell_binary_, "internal",
+                   env_detector_, displayer_, logger_),
         extra_clang_args, internal_dir_, env_detector_, logger_);
 
     metashell::header_discoverer_clang header_discoverer(cbin);

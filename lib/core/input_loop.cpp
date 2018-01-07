@@ -34,6 +34,7 @@ namespace
     }
 
     ~single_entry_guard() { _active = false; }
+
   private:
     static bool _active;
   };

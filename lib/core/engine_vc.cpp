@@ -100,9 +100,10 @@ namespace
     const boost::filesystem::path vc_path = extract_vc_binary(
         config_.active_shell_config().engine_args, env_detector_,
         config_.metashell_binary, config_.active_shell_config().engine);
-    vc_binary cbin(vc_path, vc_args(config_.active_shell_config().engine_args,
-                                    internal_dir_),
-                   temp_dir_, logger_);
+    vc_binary cbin(
+        vc_path,
+        vc_args(config_.active_shell_config().engine_args, internal_dir_),
+        temp_dir_, logger_);
 
     return make_engine(
         config_.active_shell_config().engine, not_supported(),

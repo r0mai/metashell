@@ -40,8 +40,9 @@ namespace
 
     const auto un = unique_value(value_);
 
-    return to_string(value_) == to_string(un) ? "" : to_string(value_) +
-                                                         " != " + to_string(un);
+    return to_string(value_) == to_string(un) ?
+               "" :
+               to_string(value_) + " != " + to_string(un);
   }
 
   template <class T>
@@ -55,8 +56,9 @@ namespace
     std::ostringstream s_value;
     s_value << value_;
 
-    return s_unique.str() == s_value.str() ? "" : s_unique.str() + " != " +
-                                                      s_value.str();
+    return s_unique.str() == s_value.str() ?
+               "" :
+               s_unique.str() + " != " + s_value.str();
   }
 }
 

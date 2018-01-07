@@ -37,6 +37,7 @@ namespace
     explicit bool_override_guard(bool& b_) : _b(b_) { _b = true; }
 
     ~bool_override_guard() { _b = false; }
+
   private:
     bool& _b;
   };

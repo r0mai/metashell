@@ -27,7 +27,7 @@
 namespace metashell
 {
   class rapid_shell_config_parser
-      : public rapid_handler<rapid_shell_config_parser, true>
+    : public rapid_handler<rapid_shell_config_parser, true>
   {
   public:
     std::function<void(data::shell_config)> parsed_config_callback =

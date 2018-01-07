@@ -220,12 +220,12 @@ metashell::parse_config(int argc_,
                         std::ostream* out_,
                         std::ostream* err_)
 {
-  using boost::program_options::options_description;
-  using boost::program_options::variables_map;
-  using boost::program_options::store;
   using boost::program_options::notify;
+  using boost::program_options::options_description;
   using boost::program_options::parse_command_line;
+  using boost::program_options::store;
   using boost::program_options::value;
+  using boost::program_options::variables_map;
 
   data::config cfg;
 
@@ -294,7 +294,8 @@ metashell::parse_config(int argc_,
       dec_arg{"define", 'D', dec_type::multiple_values},
       dec_arg{"std", dec_type::one_value},
       dec_arg{"no_warnings", 'w', dec_type::flag},
-      dec_arg{'f', dec_type::one_value}, dec_arg{'s', dec_type::one_value},
+      dec_arg{'f', dec_type::one_value},
+      dec_arg{'s', dec_type::one_value},
       dec_arg{
           "clang", dec_type::one_value,
           "Please use \"--engine clang\" with the custom clang binary instead.",

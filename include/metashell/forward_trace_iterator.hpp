@@ -33,8 +33,8 @@ namespace metashell
   //   The algorithm only checks vertices which are reachable from root_vertex
   // ----
   class forward_trace_iterator
-      : public boost::forward_iterator_helper<forward_trace_iterator,
-                                              const data::call_graph_node>
+    : public boost::forward_iterator_helper<forward_trace_iterator,
+                                            const data::call_graph_node>
   {
   public:
     forward_trace_iterator();

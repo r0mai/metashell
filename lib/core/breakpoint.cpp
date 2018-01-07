@@ -38,6 +38,7 @@ namespace
     }
 
     bool last_result() const { return _last_result; }
+
   private:
     boost::regex _regex;
     bool _last_result;
