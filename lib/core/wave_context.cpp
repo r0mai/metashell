@@ -21,17 +21,38 @@
 
 namespace
 {
+  boost::optional<boost::filesystem::path>
+  canonical_path(const boost::filesystem::path& path)
+  {
+    try
+    {
+      return boost::filesystem::canonical(path);
+    }
+    catch (const boost::filesystem::filesystem_error& ex)
+    {
+      return boost::none;
+    }
+  }
+
   void apply(metashell::wave_context& ctx_,
              const metashell::data::includes& includes_)
   {
     for (const boost::filesystem::path& p : includes_.sys)
     {
-      ctx_.add_sysinclude_path(p.string().c_str());
+      auto cp = canonical_path(p);
+      if (cp)
+      {
+        ctx_.add_sysinclude_path(cp->string().c_str());
+      }
     }
     for (const boost::filesystem::path& p : includes_.quote)
     {
-      ctx_.add_include_path(p.string().c_str());
-      ctx_.add_sysinclude_path(p.string().c_str());
+      auto cp = canonical_path(p);
+      if (cp)
+      {
+        ctx_.add_include_path(cp->string().c_str());
+        ctx_.add_sysinclude_path(cp->string().c_str());
+      }
     }
   }
 
