@@ -26,8 +26,8 @@ mkdocs build
 # Get the templight binary
 
 cd 3rd/templight
-  wget https://github.com/metashell/templight_binary/releases/download/templight_185020_v2/templight_ubuntu${UBUNTU_VERSION}_x86_64.tar.bz2
-  tar -xvjf templight_ubuntu${UBUNTU_VERSION}_x86_64.tar.bz2
+  wget http://sinkovics.hu/templight/templight_ubuntu14.04_x86_64.tar.bz2
+  tar -xvjf templight_ubuntu14.04_x86_64.tar.bz2
 cd ../..
 
 # Test the code
