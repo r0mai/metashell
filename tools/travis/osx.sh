@@ -11,8 +11,8 @@ brew cask uninstall oclint
 brew install p7zip
 
 if [ "$CXX" = "g++" ]; then
-  brew install gcc@6
-  export CXX="g++-6"
+  brew install gcc@4.9
+  export CXX="g++-4.9"
 fi
 
 # Test that the download version links are correct
