@@ -8,10 +8,6 @@ sudo softwareupdate -i "Command Line Tools (macOS High Sierra version 10.13) for
 
 brew update >/dev/null
 
-# Oclint installs something under /usr/local/include/c++ which
-# conflicts with files installed by gcc
-brew cask uninstall oclint
-
 brew install p7zip
 
 if [ "$CXX" = "g++" ]; then
