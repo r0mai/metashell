@@ -92,12 +92,12 @@ fi
 mkdir -p "bin/${PLATFORM_ID}/metashell"; cd "bin/${PLATFORM_ID}/metashell"
   if [ -z "${METASHELL_NO_DOC_GENERATION}" ]
   then
-    cmake ../../.. ${TESTS_ARG}
+    time cmake ../../.. ${TESTS_ARG}
   else
-    cmake ../../.. ${TESTS_ARG} -DMETASHELL_NO_DOC_GENERATION=1
+    time cmake ../../.. ${TESTS_ARG} -DMETASHELL_NO_DOC_GENERATION=1
   fi
-  make -j${BUILD_THREADS}
-  ctest -j${TEST_THREADS} || (cat Testing/Temporary/LastTest.log && false)
+  time make -j${BUILD_THREADS}
+  time ctest -j${TEST_THREADS} || (cat Testing/Temporary/LastTest.log && false)
 cd ../../..
 
 if [ "${NO_INSTALLER}" = "" ]
