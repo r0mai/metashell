@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 #
 # Metashell - Interactive C++ template metaprogramming shell
 # Copyright (C) 2013, Abel Sinkovics (abel@sinkovics.hu)
@@ -96,7 +96,7 @@ mkdir -p "bin/${PLATFORM_ID}/metashell"; cd "bin/${PLATFORM_ID}/metashell"
   else
     time cmake ../../.. ${TESTS_ARG} -DMETASHELL_NO_DOC_GENERATION=1
   fi
-  time make -j${BUILD_THREADS}
+  time make -j1 2> >(grep -A 3 'Clang front-end time report')
   time ctest -j${TEST_THREADS} || (cat Testing/Temporary/LastTest.log && false)
 cd ../../..
 

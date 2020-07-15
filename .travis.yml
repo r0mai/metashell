@@ -3,7 +3,6 @@ sudo: required
 dist: trusty
 osx_image: xcode11.5
 os:
-  - linux
   - osx
 compiler:
   - gcc
@@ -16,11 +15,6 @@ env:
   - TESTS=gcc
   - TESTS=wave
   - TESTS=auto
-matrix:
-  include:
-    - os: linux
-      compiler: gcc
-      env: STATIC_CHECKS="true"
 addons:
   apt:
     sources:

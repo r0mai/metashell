@@ -22,6 +22,8 @@ else()
   cmake_policy(VERSION 3.12)
 endif()
 
+add_compile_options("-ftime-report")
+
 set(SYSTEM_TESTS internal templight clang gcc msvc wave)
 set(VALID_TESTS ${SYSTEM_TESTS} unit auto)
 if (DEFINED TESTS AND NOT (TESTS IN_LIST VALID_TESTS))
