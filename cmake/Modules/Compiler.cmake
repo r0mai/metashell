@@ -29,7 +29,12 @@ function(enable_warnings TARGET)
     target_compile_options(${TARGET} PRIVATE -Wall -Wextra)
     message(STATUS "Turning on warnings for GCC")
   elseif("x${CMAKE_CXX_COMPILER_ID}" STREQUAL "xClang")
-    target_compile_options(${TARGET} PRIVATE -Wall -Wextra -pedantic)
+    target_compile_options(${TARGET} PRIVATE
+      -Wall
+      -Wextra
+      -pedantic
+      -Wno-unused-command-line-argument
+    )
     message(STATUS "Turning on warnings for Clang")
   endif()
 endfunction()
