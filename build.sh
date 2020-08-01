@@ -86,11 +86,16 @@ else
 fi
 
 mkdir -p "bin/${PLATFORM_ID}/metashell"; cd "bin/${PLATFORM_ID}/metashell"
+  CCACHE_FLAGS=""
+  if [ "${ENABLE_CCACHE}" != "" ]
+  then
+    CCACHE_FLAGS="-DCMAKE_CXX_COMPILER_LAUNCHER=ccache"
+  fi
   if [ -z "${METASHELL_NO_DOC_GENERATION}" ]
   then
-    cmake ../../.. ${TESTS_ARG}
+    cmake ../../.. ${TESTS_ARG} ${CCACHE_FLAGS}
   else
-    cmake ../../.. ${TESTS_ARG} -DMETASHELL_NO_DOC_GENERATION=1
+    cmake ../../.. ${TESTS_ARG} -DMETASHELL_NO_DOC_GENERATION=1 ${CCACHE_FLAGS}
   fi
   make -j${BUILD_THREADS}
   ctest -j${TEST_THREADS} || (cat Testing/Temporary/LastTest.log && false)
