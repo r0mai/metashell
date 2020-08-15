@@ -120,6 +120,9 @@ endif ()
 
 enable_testing()
 
+# must come before targets that use it
+add_subdirectory(lib/pch)
+
 add_subdirectory(app/metashell)
 add_subdirectory(app/reference_gen)
 add_subdirectory(app/stub/apple_clang)

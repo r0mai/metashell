@@ -21,6 +21,8 @@ add_executable(${PROJECT_NAME} ${SOURCES})
 
 enable_warnings(${PROJECT_NAME})
 
+target_precompile_headers(${PROJECT_NAME} REUSE_FROM metashell_pch)
+
 target_link_libraries(
   ${PROJECT_NAME}
 

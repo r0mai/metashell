@@ -24,6 +24,8 @@ enable_warnings(${PROJECT_NAME})
 
 target_include_directories(${PROJECT_NAME} PUBLIC ${PROJECT_SOURCE_DIR}/include)
 
+target_precompile_headers(${PROJECT_NAME} REUSE_FROM metashell_pch)
+
 if (WIN32)
   target_link_libraries(${PROJECT_NAME} wineditline)
   target_compile_definitions(${PROJECT_NAME} PRIVATE USE_EDITLINE)
