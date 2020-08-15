@@ -5,6 +5,7 @@ set -ex
 brew update >/dev/null
 
 brew install p7zip
+brew upgrade cmake # we need at least cmake 3.16 for precompiled header support
 
 if [ "$CXX" = "g++" ]; then
   brew install gcc@7
