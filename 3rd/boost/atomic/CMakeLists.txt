@@ -42,12 +42,4 @@ target_link_libraries(
     boost::config
 )
 
-# Workaround on some systems (OSX + clang + Boost 1.55)
-target_compile_definitions(
-  ${PROJECT_NAME}
-  
-  ${LIB_TYPE}
-    BOOST_ATOMIC_FORCE_FALLBACK=1
-)
-
 boost_lib(${LIB_TYPE} ${PROJECT_NAME})
