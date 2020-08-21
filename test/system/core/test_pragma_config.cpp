@@ -29,13 +29,9 @@
 
 using namespace metashell::system_test;
 
-namespace
-{
-  auto res = code_completion_result::create;
-}
-
 TEST(shell_pragma_config, listing)
 {
+  auto res = code_completion_result::create;
   just::temp::directory temp_dir;
   const auto config_path =
       boost::filesystem::path(temp_dir.path()) / "config.json";
@@ -87,6 +83,7 @@ TEST(shell_pragma_config, listing)
 
 TEST(pragma_config, code_complete)
 {
+  auto res = code_completion_result::create;
   just::temp::directory temp_dir;
   const auto config_path =
       boost::filesystem::path(temp_dir.path()) / "config.json";
