@@ -20,7 +20,7 @@
 #include <metashell/data/cpp_code.hpp>
 #include <metashell/data/string.hpp>
 
-#include <boost/optional.hpp>
+#include <optional>
 
 namespace metashell
 {
@@ -33,8 +33,17 @@ namespace metashell
     public:
       using string<type, true, constraint::any, constraint::any, cpp_code>::
           string;
+
       using string<type, true, constraint::any, constraint::any, cpp_code>::
           value;
+
+      using string<type, true, constraint::any, constraint::any, cpp_code>::
+          size;
+
+      using string<type, true, constraint::any, constraint::any, cpp_code>::
+          begin;
+
+      using string<type, true, constraint::any, constraint::any, cpp_code>::end;
 
       static constexpr const char* name_of_type() { return "type"; }
 
@@ -46,7 +55,7 @@ namespace metashell
       operator cpp_code() const;
     };
 
-    boost::optional<type> trim_wrap_type(const type& type_);
+    std::optional<type> trim_wrap_type(const type& type_);
     bool is_remove_ptr(const type& type_);
   }
 }

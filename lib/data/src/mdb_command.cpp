@@ -35,18 +35,6 @@ namespace metashell
     namespace
     {
       bool is_space(char c_) { return std::isspace(c_); }
-
-      template <class T>
-      auto begin_of(const T& t_)
-      {
-        return begin(t_);
-      }
-
-      template <class T>
-      auto end_of(const T& t_)
-      {
-        return end(t_);
-      }
     }
 
     mdb_command::argument_type::argument_type(std::string value_,
@@ -104,13 +92,17 @@ namespace metashell
     mdb_command::arguments_type::iterator
     mdb_command::arguments_type::begin() const
     {
-      return iterator(begin_of(*this), end_of(*this));
+      return iterator{
+          this->string<arguments_type, true, constraint::code>::begin(),
+          this->string<arguments_type, true, constraint::code>::end()};
     }
 
     mdb_command::arguments_type::iterator
     mdb_command::arguments_type::end() const
     {
-      return iterator(end_of(*this), end_of(*this));
+      return iterator{
+          this->string<arguments_type, true, constraint::code>::end(),
+          this->string<arguments_type, true, constraint::code>::end()};
     }
 
     std::string join(mdb_command::arguments_type::iterator begin_,
@@ -202,7 +194,7 @@ namespace metashell
       return regex(value());
     }
 
-    mdb_command::arguments_type::operator boost::optional<mdb_command>() const
+    mdb_command::arguments_type::operator std::optional<mdb_command>() const
     {
       return mdb_command::parse(value());
     }
@@ -218,7 +210,7 @@ namespace metashell
     {
     }
 
-    boost::optional<mdb_command> mdb_command::parse(const std::string& value_)
+    std::optional<mdb_command> mdb_command::parse(const std::string& value_)
     {
       const auto e = value_.end();
 
@@ -226,7 +218,7 @@ namespace metashell
       auto command_end = std::find_if(command_begin, e, is_space);
       if (command_begin == command_end)
       {
-        return boost::none;
+        return std::nullopt;
       }
       else
       {
@@ -241,10 +233,10 @@ namespace metashell
 
     bool empty(const mdb_command& cmd_)
     {
-      assert(!(empty(cmd_.name()) && !empty(cmd_.separator())));
-      assert(!(empty(cmd_.name()) && !empty(cmd_.arguments())));
+      assert(!(cmd_.name().empty() && !cmd_.separator().empty()));
+      assert(!(cmd_.name().empty() && !cmd_.arguments().empty()));
 
-      return empty(cmd_.prefix()) && empty(cmd_.name());
+      return cmd_.prefix().empty() && cmd_.name().empty();
     }
 
     const whitespace& mdb_command::prefix() const { return std::get<0>(_val); }

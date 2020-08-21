@@ -18,6 +18,7 @@
 #include <metashell/main_shell/process_pragma.hpp>
 #include <metashell/main_shell/shell.hpp>
 
+#include <metashell/core/code_complete.hpp>
 #include <metashell/core/command.hpp>
 #include <metashell/core/header_file_environment.hpp>
 #include <metashell/core/is_environment_setup_command.hpp>
@@ -196,6 +197,88 @@ namespace metashell {
           return nullptr;
         }
       }
+
+      bool code_complete_pp_directive(const data::cpp_code& prefix_,
+                                      bool metashell_extensions_,
+                                      data::command::const_iterator begin_,
+                                      data::command::const_iterator end_,
+                                      iface::main_shell& shell_,
+                                      data::code_completion& out_)
+      {
+        if (begin_ == end_)
+        {
+          bool found = false;
+          for (const auto& directive :
+               {data::cpp_code{"define"}, data::cpp_code{"if"},
+                data::cpp_code{"ifdef"}, data::cpp_code{"ifndef"},
+                data::cpp_code{"include"}, data::cpp_code{"else"},
+                data::cpp_code{"elif"}, data::cpp_code{"endif"},
+                data::cpp_code{"error"}, data::cpp_code{"line"},
+                data::cpp_code{"pragma"}, data::cpp_code{"undef"},
+                data::cpp_code{"warning"}})
+          {
+            if (starts_with(directive, prefix_))
+            {
+              out_.insert(data::user_input{directive.substr(prefix_.size())});
+              found = true;
+            }
+          }
+
+          if (metashell_extensions_ &&
+              starts_with(data::cpp_code{"msh"}, prefix_))
+          {
+            out_.insert(data::user_input{"msh"}.substr(prefix_.size()));
+            found = true;
+          }
+          return found;
+        }
+
+        if (metashell_extensions_ && prefix_ == data::cpp_code{"pragma"})
+        {
+          begin_ = data::skip_all_whitespace(begin_, end_);
+          if (begin_ == end_)
+          {
+            out_.insert(data::user_input{"metashell"});
+            return false;
+          }
+          else if (type_of(*begin_) == data::token_type::identifier)
+          {
+            const data::cpp_code val = value(*begin_);
+            const data::cpp_code metashell_{"metashell"};
+
+            if (val == metashell_)
+            {
+              ++begin_;
+              auto[completions, pragmas] =
+                  core::code_complete::pragma_metashell(
+                      data::skip_all_whitespace(begin_, end_), end_,
+                      shell_.pragma_handlers());
+              out_.insert(std::move(completions));
+              for (const auto& p : pragmas)
+              {
+                out_.insert(p.first->code_complete(p.second, end_, shell_));
+              }
+              return true;
+            }
+            else if (starts_with(metashell_, val))
+            {
+              out_.insert(data::user_input{metashell_.substr(val.size())});
+              return true;
+            }
+          }
+          return false;
+        }
+
+        return false;
+      }
+
+      template <data::token_category... Cs>
+      bool any_of(data::token_category category_)
+      {
+        const data::token_category cats[] = {Cs...};
+        return std::find(std::begin(cats), std::end(cats), category_) !=
+               std::end(cats);
+      }
     }
 
     shell::shell(
@@ -204,6 +287,7 @@ namespace metashell {
         const boost::filesystem::path& env_filename_,
         std::function<std::unique_ptr<iface::engine>(const data::shell_config&)>
             engine_builder_,
+        std::vector<data::real_engine_name> available_engines_,
         std::map<data::pragma_name, std::unique_ptr<iface::pragma_handler>>
             pragma_handlers_,
         core::logger* logger_,
@@ -216,6 +300,7 @@ namespace metashell {
         _stopped(false),
         _logger(logger_),
         _engine_builder(std::move(engine_builder_)),
+        _available_engines{std::move(available_engines_)},
         _echo(determine_echo(config_.active_shell_config())),
         _show_cpp_errors(
             determine_show_cpp_errors(config_.active_shell_config())),
@@ -296,7 +381,7 @@ namespace metashell {
         if (!ends_with(s_, data::user_input("\\")))
         {
           const data::user_input s = _line_prefix + s_;
-          clear(_line_prefix);
+          _line_prefix.clear();
 
           const data::command cmd = core::to_command(data::cpp_code(s));
 
@@ -310,8 +395,7 @@ namespace metashell {
 
             if (!is_empty_line(cmd))
             {
-              if (boost::optional<data::command::iterator> p =
-                      parse_pragma(cmd))
+              if (std::optional<data::command::iterator> p = parse_pragma(cmd))
               {
                 process_pragma(
                     _pragma_handlers, *p, cmd.end(), *this, displayer_);
@@ -333,7 +417,7 @@ namespace metashell {
         }
         else
         {
-          _line_prefix += substr(s_, 0, size(s_) - 1);
+          _line_prefix += s_.substr(0, s_.size() - 1);
         }
       }
       catch (const std::exception& e)
@@ -348,7 +432,7 @@ namespace metashell {
 
     std::string shell::prompt() const
     {
-      return empty(_line_prefix) ? ">" : "...>";
+      return _line_prefix.empty() ? ">" : "...>";
     }
 
     bool shell::store_in_buffer(const data::cpp_code& s_,
@@ -377,19 +461,220 @@ namespace metashell {
       return r.successful;
     }
 
-    void shell::code_complete(const data::user_input& s_,
-                              std::set<data::user_input>& out_)
+    data::code_completion shell::code_complete(const data::user_input& s_,
+                                               bool metashell_extensions_)
     {
+      data::code_completion result;
+
       try
       {
-        engine().code_completer().code_complete(
-            *_env, s_, out_,
-            enabled(data::shell_flag::use_precompiled_headers));
+        const data::command cmd = core::to_command(data::cpp_code{s_});
+        const auto e = cmd.end();
+        auto i = data::skip_all_whitespace(cmd.begin(), e);
+        if (i != e)
+        {
+          switch (type_of(*i))
+          {
+          case data::token_type::p_define:
+          case data::token_type::p_if:
+          case data::token_type::p_ifdef:
+          case data::token_type::p_ifndef:
+          case data::token_type::p_else:
+          case data::token_type::p_elif:
+          case data::token_type::p_endif:
+          case data::token_type::p_error:
+          case data::token_type::p_line:
+          case data::token_type::p_pragma:
+          case data::token_type::p_undef:
+          case data::token_type::p_warning:
+          case data::token_type::p_include:
+          {
+            data::cpp_code directive{format_token(*i).substr(1)};
+
+            for (++i;
+                 i != e && any_of<data::token_category::identifier,
+                                  data::token_category::keyword>(category(*i));
+                 ++i)
+            {
+              directive += data::cpp_code{format_token(*i)};
+            }
+
+            if (code_complete_pp_directive(
+                    directive, metashell_extensions_, i, e, *this, result))
+            {
+              return result;
+            }
+          }
+          break;
+          case data::token_type::operator_pound:
+          {
+            ++i;
+            i = data::skip_all_whitespace(i, e);
+
+            const auto directive = i == e ? data::cpp_code{} : value(*i);
+            if (i != e)
+            {
+              ++i;
+            }
+
+            if (code_complete_pp_directive(
+                    directive, metashell_extensions_, i, e, *this, result))
+            {
+              return result;
+            }
+            else if (metashell_extensions_ &&
+                     directive == data::cpp_code{"msh"})
+            {
+              auto[completions, pragmas] =
+                  core::code_complete::pragma_metashell(
+                      i, e, pragma_handlers());
+              result.insert(std::move(completions));
+              for (const auto& p : pragmas)
+              {
+                result.insert(p.first->code_complete(p.second, e, *this));
+              }
+              return result;
+            }
+          }
+          break;
+          case data::token_type::unknown:
+          case data::token_type::identifier:
+          case data::token_type::character_literal:
+          case data::token_type::floating_literal:
+          case data::token_type::integer_literal:
+          case data::token_type::string_literal:
+          case data::token_type::bool_literal:
+          case data::token_type::c_comment:
+          case data::token_type::cpp_comment:
+          case data::token_type::whitespace:
+          case data::token_type::continue_line:
+          case data::token_type::new_line:
+          case data::token_type::keyword_asm:
+          case data::token_type::keyword_auto:
+          case data::token_type::keyword_bool:
+          case data::token_type::keyword_break:
+          case data::token_type::keyword_case:
+          case data::token_type::keyword_catch:
+          case data::token_type::keyword_char:
+          case data::token_type::keyword_class:
+          case data::token_type::keyword_const:
+          case data::token_type::keyword_constexpr:
+          case data::token_type::keyword_const_cast:
+          case data::token_type::keyword_continue:
+          case data::token_type::keyword_default:
+          case data::token_type::keyword_delete:
+          case data::token_type::keyword_do:
+          case data::token_type::keyword_double:
+          case data::token_type::keyword_dynamic_cast:
+          case data::token_type::keyword_else:
+          case data::token_type::keyword_enum:
+          case data::token_type::keyword_explicit:
+          case data::token_type::keyword_export:
+          case data::token_type::keyword_extern:
+          case data::token_type::keyword_float:
+          case data::token_type::keyword_for:
+          case data::token_type::keyword_friend:
+          case data::token_type::keyword_goto:
+          case data::token_type::keyword_if:
+          case data::token_type::keyword_inline:
+          case data::token_type::keyword_int:
+          case data::token_type::keyword_long:
+          case data::token_type::keyword_mutable:
+          case data::token_type::keyword_namespace:
+          case data::token_type::keyword_new:
+          case data::token_type::keyword_operator:
+          case data::token_type::keyword_private:
+          case data::token_type::keyword_protected:
+          case data::token_type::keyword_public:
+          case data::token_type::keyword_register:
+          case data::token_type::keyword_reinterpret_cast:
+          case data::token_type::keyword_return:
+          case data::token_type::keyword_short:
+          case data::token_type::keyword_signed:
+          case data::token_type::keyword_sizeof:
+          case data::token_type::keyword_static:
+          case data::token_type::keyword_static_cast:
+          case data::token_type::keyword_struct:
+          case data::token_type::keyword_switch:
+          case data::token_type::keyword_template:
+          case data::token_type::keyword_this:
+          case data::token_type::keyword_throw:
+          case data::token_type::keyword_try:
+          case data::token_type::keyword_typedef:
+          case data::token_type::keyword_typeid:
+          case data::token_type::keyword_typename:
+          case data::token_type::keyword_union:
+          case data::token_type::keyword_unsigned:
+          case data::token_type::keyword_using:
+          case data::token_type::keyword_virtual:
+          case data::token_type::keyword_void:
+          case data::token_type::keyword_volatile:
+          case data::token_type::keyword_wchar_t:
+          case data::token_type::keyword_while:
+          case data::token_type::operator_bitwise_and:
+          case data::token_type::operator_logical_and:
+          case data::token_type::operator_assign:
+          case data::token_type::operator_bitwise_and_assign:
+          case data::token_type::operator_bitwise_or:
+          case data::token_type::operator_bitwise_or_assign:
+          case data::token_type::operator_bitwise_xor:
+          case data::token_type::operator_bitwise_xor_assign:
+          case data::token_type::operator_comma:
+          case data::token_type::operator_colon:
+          case data::token_type::operator_divide:
+          case data::token_type::operator_divide_assign:
+          case data::token_type::operator_dot:
+          case data::token_type::operator_dotstar:
+          case data::token_type::operator_ellipsis:
+          case data::token_type::operator_equal:
+          case data::token_type::operator_greater:
+          case data::token_type::operator_greater_equal:
+          case data::token_type::operator_left_brace:
+          case data::token_type::operator_less:
+          case data::token_type::operator_less_equal:
+          case data::token_type::operator_left_paren:
+          case data::token_type::operator_left_bracket:
+          case data::token_type::operator_minus:
+          case data::token_type::operator_minus_assign:
+          case data::token_type::operator_minus_minus:
+          case data::token_type::operator_modulo:
+          case data::token_type::operator_modulo_assign:
+          case data::token_type::operator_logical_not:
+          case data::token_type::operator_not_equal:
+          case data::token_type::operator_logical_or:
+          case data::token_type::operator_plus:
+          case data::token_type::operator_plus_assign:
+          case data::token_type::operator_plus_plus:
+          case data::token_type::operator_arrow:
+          case data::token_type::operator_arrow_star:
+          case data::token_type::operator_question_mark:
+          case data::token_type::operator_right_brace:
+          case data::token_type::operator_right_paren:
+          case data::token_type::operator_right_bracket:
+          case data::token_type::operator_colon_colon:
+          case data::token_type::operator_semicolon:
+          case data::token_type::operator_left_shift:
+          case data::token_type::operator_left_shift_assign:
+          case data::token_type::operator_right_shift:
+          case data::token_type::operator_right_shift_assign:
+          case data::token_type::operator_star:
+          case data::token_type::operator_bitwise_not:
+          case data::token_type::operator_star_assign:
+          case data::token_type::operator_pound_pound:
+            // ignore
+            break;
+          }
+        }
+
+        result.insert(engine().code_completer().code_complete(
+            *_env, s_, enabled(data::shell_flag::use_precompiled_headers)));
       }
       catch (...)
       {
         // ignore
       }
+
+      return result;
     }
 
     const std::map<data::pragma_name, std::unique_ptr<iface::pragma_handler>>&
@@ -412,7 +697,7 @@ namespace metashell {
           try_to_get_shell(engine()), _config.active_shell_config(),
           _internal_dir, _env_filename);
 
-      if (!empty(content_))
+      if (!content_.empty())
       {
         _env->append(content_);
       }
@@ -608,6 +893,11 @@ namespace metashell {
         rebuild_environment();
         throw;
       }
+    }
+
+    const std::vector<data::real_engine_name>& shell::available_engines() const
+    {
+      return _available_engines;
     }
   }
 }

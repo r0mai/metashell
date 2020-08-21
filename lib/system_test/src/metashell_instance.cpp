@@ -270,6 +270,13 @@ namespace metashell
       return args_;
     }
 
+    data::command_line_argument_list
+    with_includes(data::command_line_argument_list args_,
+                  const std::vector<boost::filesystem::path>& paths_)
+    {
+      return with_quoteincludes(with_sysincludes(args_, paths_), paths_);
+    }
+
     bool using_msvc()
     {
       const auto engine = current_engine();
@@ -278,7 +285,7 @@ namespace metashell
         const auto& args = system_test_config::engine_args();
         return std::find_if(args.begin(), args.end(),
                             [](const data::command_line_argument& arg) {
-                              return find(arg, "cl.exe") != std::string::npos;
+                              return arg.find("cl.exe") != std::string::npos;
                             }) != args.end();
       }
       else

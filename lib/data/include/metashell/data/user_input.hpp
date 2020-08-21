@@ -23,7 +23,7 @@
 #include <metashell/data/mdb_command.hpp>
 #include <metashell/data/string.hpp>
 
-#include <boost/optional.hpp>
+#include <optional>
 
 namespace metashell
 {
@@ -34,6 +34,13 @@ namespace metashell
     public:
       using string<user_input, true, constraint::code>::string;
       using string<user_input, true, constraint::code>::value;
+      using string<user_input, true, constraint::code>::c_str;
+      using string<user_input, true, constraint::code>::begin;
+      using string<user_input, true, constraint::code>::end;
+      using string<user_input, true, constraint::code>::size;
+      using string<user_input, true, constraint::code>::empty;
+      using string<user_input, true, constraint::code>::substr;
+      using string<user_input, true, constraint::code>::clear;
 
       static constexpr const char* name_of_type() { return "user input"; }
 
@@ -41,7 +48,7 @@ namespace metashell
       explicit user_input(const cpp_code&);
 
       explicit operator cpp_code() const;
-      explicit operator boost::optional<mdb_command>() const;
+      explicit operator std::optional<mdb_command>() const;
     };
 
     bool has_non_whitespace(const user_input&);

@@ -35,7 +35,7 @@ namespace metashell
 
     type::operator cpp_code() const { return name(); }
 
-    boost::optional<type> trim_wrap_type(const type& type_)
+    std::optional<type> trim_wrap_type(const type& type_)
     {
       const type wrap_prefix("metashell::impl::wrap<");
       const type wrap_suffix(">");
@@ -44,13 +44,13 @@ namespace metashell
       // since we know whats inside wrap<...> (mp->get_evaluation_result)
       if (starts_with(type_, wrap_prefix) && ends_with(type_, wrap_suffix))
       {
-        return type(trim_copy(substr(
-            type_.name(), size(wrap_prefix),
-            size(type_.name()) - size(wrap_prefix) - size(wrap_suffix))));
+        return type(trim_copy(type_.name().substr(
+            wrap_prefix.size(),
+            type_.name().size() - wrap_prefix.size() - wrap_suffix.size())));
       }
       else
       {
-        return boost::none;
+        return std::nullopt;
       }
     }
 

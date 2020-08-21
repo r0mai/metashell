@@ -26,9 +26,9 @@
 #include <metashell/data/whitespace.hpp>
 
 #include <boost/operators.hpp>
-#include <boost/optional.hpp>
 
 #include <iosfwd>
+#include <optional>
 #include <string>
 #include <tuple>
 
@@ -49,10 +49,31 @@ namespace metashell
                      false,
                      constraint::name_non_first,
                      constraint::name_first>::string;
+
         using string<name_type,
                      false,
                      constraint::name_non_first,
                      constraint::name_first>::value;
+
+        using string<name_type,
+                     false,
+                     constraint::name_non_first,
+                     constraint::name_first>::empty;
+
+        using string<name_type,
+                     false,
+                     constraint::name_non_first,
+                     constraint::name_first>::size;
+
+        using string<name_type,
+                     false,
+                     constraint::name_non_first,
+                     constraint::name_first>::begin;
+
+        using string<name_type,
+                     false,
+                     constraint::name_non_first,
+                     constraint::name_first>::end;
 
         name_type() = delete;
 
@@ -110,6 +131,7 @@ namespace metashell
 
         using string<arguments_type, true, constraint::code>::string;
         using string<arguments_type, true, constraint::code>::value;
+        using string<arguments_type, true, constraint::code>::empty;
 
         static constexpr const char* name_of_type()
         {
@@ -121,7 +143,7 @@ namespace metashell
 
         explicit operator int() const;
         explicit operator regex() const;
-        explicit operator boost::optional<mdb_command>() const;
+        explicit operator std::optional<mdb_command>() const;
       };
 
       using tuple_t =
@@ -136,7 +158,7 @@ namespace metashell
 
       const tuple_t tuple() const;
 
-      static boost::optional<mdb_command> parse(const std::string&);
+      static std::optional<mdb_command> parse(const std::string&);
 
     private:
       tuple_t _val;

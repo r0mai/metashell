@@ -38,7 +38,7 @@ namespace metashell
       }
     }
 
-    boost::optional<data::command::iterator>
+    std::optional<data::command::iterator>
     parse_pragma(const data::command& cmd_)
     {
       data::command::iterator i = skip_whitespace(cmd_.begin(), cmd_.end());
@@ -52,7 +52,7 @@ namespace metashell
             (value(*i) == "metashell" || value(*i) == "msh"))
         {
           i = skip_whitespace(skip(i), cmd_.end());
-          if (i == cmd_.end() || empty(value(*i)))
+          if (i == cmd_.end() || value(*i).empty())
           {
             throw data::exception(
                 "The name of the metashell pragma is missing.");
@@ -70,7 +70,7 @@ namespace metashell
         }
       }
 
-      return boost::none;
+      return std::nullopt;
     }
 
     data::command::iterator
